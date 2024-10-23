@@ -4,10 +4,38 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Weight Journal.xcscheme_^#shared#^_</key>
+		<key>Promises (Playground).xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>Rx (Playground).xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+		<key>Weight Journal.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>7EECE45E2CC8049700F5E9D1</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7EECE4742CC8049A00F5E9D1</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7EECE47E2CC8049A00F5E9D1</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>
