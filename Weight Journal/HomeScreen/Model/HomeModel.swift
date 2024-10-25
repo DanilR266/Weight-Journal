@@ -13,27 +13,35 @@ class HomeModel {
     
     private let db = Firestore.firestore()
     let documentID = UserDefaults.standard.string(forKey: "DocumentID")
-    
-    func fetchUser(completion: @escaping (User?, Error?) -> Void) {
+
+    func fetchUser(completion: @escaping (UserInfo?, Error?) -> Void) {
         guard let documentID = documentID else {
             UserDefaults.standard.set(false, forKey: "SignIn")
             NotificationCenter.default.post(name: Notification.Name("AuthStatusChanged"), object: nil)
             return
         }
-        db.collection("Users").document(documentID).getDocument { document, error in
-            guard let data = document?.data(), error == nil else {
+        
+        db.collection("Users").document(documentID).getDocument { snapshot, error in
+            if let error = error {
+                print("Error fetching user: \(error)")
                 completion(nil, error)
                 return
             }
             
-            guard let name = data["Name"] as? String else {
+            if let snapshot = snapshot, snapshot.exists {
+                do {
+                    let user = try snapshot.data(as: UserInfo.self)
+                    completion(user, nil)
+                } catch let decodeError {
+                    print("Error decoding user data: \(decodeError)")
+                    completion(nil, decodeError)
+                }
+            } else {
+                print("User not found.")
                 completion(nil, nil)
-                return
             }
-            
-            let user = User(id: documentID, name: name)
-            completion(user, nil)
         }
     }
+
     
 }

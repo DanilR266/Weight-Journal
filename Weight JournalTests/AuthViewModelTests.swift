@@ -88,6 +88,20 @@ class AuthViewModelTests: XCTestCase {
         }
     }
     
+    
+    func testLogInComplete() {
+        let expectation = XCTestExpectation(description: "User sign in completed")
+        
+        viewModel.email.onNext("test@new.com")
+        viewModel.password.onNext("Password")
+        
+        viewModel.logIn()
+        
+        let documentID = UserDefaults.standard.string(forKey: "DocumentID")
+        
+        XCTAssertNotNil(documentID)
+    }
+    
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.

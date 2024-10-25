@@ -16,23 +16,26 @@ class HomeViewModel {
     private let disposeBag = DisposeBag()
     
     static let shared = HomeViewModel()
-    
+    var userNameTest: String = ""
     var authModel = FirebaseAuthenticate.shared
     private let model = HomeModel()
-    
+    var userInfo: UserInfo?
     func fetchData() {
         model.fetchUser(completion: { [weak self] user, error in
             guard let self = self else { return }
             if let error = error {
                 print("Error fetching user: \(error.localizedDescription)")
-                self.userName.onNext("\(StringConstantsHome.helloText) user")
+                self.userName.onNext("\(StringConstantsHome.helloText)")
                 return
             }
-            guard let name = user?.name else {
-                self.userName.onNext("\(StringConstantsHome.helloText) user")
+            guard let user = user else {
+                self.userName.onNext("\(StringConstantsHome.helloText)")
                 return
             }
-            self.userName.onNext("\(StringConstantsHome.helloText) \(name)")
+            self.userName.onNext("\(StringConstantsHome.helloText) \(user.name)")
+            self.userNameTest = user.name
+            self.userInfo = user
+            
         })
     }
     
