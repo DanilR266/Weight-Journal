@@ -9,15 +9,16 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class HomeController: UIViewController {
+class HomeController: BaseUIViewController {
 
-    private let homeView = HomeView()
+    private let subView = HomeView()
     private let homeViewModel: HomeViewModel
     private let disposeBag = DisposeBag()
+
     
     init(homeViewModel: HomeViewModel = HomeViewModel.shared) {
         self.homeViewModel = homeViewModel
-        super.init(nibName: nil, bundle: nil)
+        super.init(customView: subView)
     }
     
     required init?(coder: NSCoder) {
@@ -26,19 +27,19 @@ class HomeController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .backgroundColor
-        
         bindToViewModel()
         homeViewModel.fetchData()
-        
-        setupButtonsActions()
     }
     
-    override func loadView() {
-        super.loadView()
-        view = homeView
+    override func setupActions() {
+        subView.buttonWeight.addTarget(self, action: #selector(buttonWeightTap), for: .touchUpInside)
+        subView.buttonCalories.addTarget(self, action: #selector(buttonCaloriesTap), for: .touchUpInside)
+        subView.buttonWater.addTarget(self, action: #selector(buttonWaterTap), for: .touchUpInside)
     }
 
+}
+
+extension HomeController {
     
     @objc func buttonWeightTap() {
 //        let vc = WeightScreenController()
@@ -54,12 +55,6 @@ class HomeController: UIViewController {
         homeViewModel.signOut()
     }
     
-    private func setupButtonsActions() {
-        homeView.buttonWeight.addTarget(self, action: #selector(buttonWeightTap), for: .touchUpInside)
-        homeView.buttonCalories.addTarget(self, action: #selector(buttonCaloriesTap), for: .touchUpInside)
-        homeView.buttonWater.addTarget(self, action: #selector(buttonWaterTap), for: .touchUpInside)
-    }
-
 }
 
 extension HomeController {
@@ -67,7 +62,7 @@ extension HomeController {
     private func bindToViewModel() {
         homeViewModel.userName
             .observe(on: MainScheduler.instance)
-            .bind(to: homeView.labelHello.rx.text)
+            .bind(to: subView.labelHello.rx.text)
             .disposed(by: disposeBag)
     }
     

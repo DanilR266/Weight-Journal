@@ -9,9 +9,17 @@ import Foundation
 import UIKit
 
 
-class AuthView: UIView {
+class AuthView: BaseUIView {
     
-    let size = Size()
+    lazy var imageIcon: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: "authIcon")
+        image.contentMode = .scaleAspectFill
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.widthAnchor.constraint(equalToConstant: size.scaleWidth(226)).isActive = true
+        image.heightAnchor.constraint(equalToConstant: size.scaleHeight(183)).isActive = true
+        return image
+    }()
     
     lazy var labelCreateAccount: UILabel = {
         let lbl = UILabel()
@@ -93,7 +101,8 @@ class AuthView: UIView {
         return view
     }()
     
-    private func setupUI() {
+    override func setupView() {
+        addSubview(imageIcon)
         addSubview(labelCreateAccount)
         addSubview(scrollView)
         addSubview(textFieldName)
@@ -110,9 +119,12 @@ class AuthView: UIView {
         stackView2.addArrangedSubview(label4)
     }
     
-    private func setupConstraints() {
+    override func setupConstraints() {
         NSLayoutConstraint.activate([
-            labelCreateAccount.topAnchor.constraint(equalTo: topAnchor, constant: size.scaleHeight(280)),
+            imageIcon.centerXAnchor.constraint(equalTo: centerXAnchor),
+            imageIcon.topAnchor.constraint(equalTo: topAnchor, constant: size.scaleHeight(70)),
+            
+            labelCreateAccount.topAnchor.constraint(equalTo: imageIcon.bottomAnchor, constant: size.scaleHeight(30)),
             labelCreateAccount.centerXAnchor.constraint(equalTo: centerXAnchor),
             
             textFieldEmail.topAnchor.constraint(equalTo: labelCreateAccount.bottomAnchor, constant: size.scaleHeight(30)),
@@ -139,16 +151,6 @@ class AuthView: UIView {
             stackView2.topAnchor.constraint(equalTo: buttonSignIn.bottomAnchor, constant: size.scaleHeight(60)),
             stackView2.centerXAnchor.constraint(equalTo: buttonSignIn.centerXAnchor),
         ])
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupUI()
-        setupConstraints()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
 }

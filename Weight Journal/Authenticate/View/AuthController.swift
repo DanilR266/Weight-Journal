@@ -11,22 +11,21 @@ import RxSwift
 import RxCocoa
 
 
-class AuthController: UIViewController {
+class AuthController: BaseUIViewController {
     
     private let authViewModel: AuthViewModel
-    private let authView = AuthView()
     
     private let disposeBag = DisposeBag()
     
-    var labelTopConstraint: NSLayoutConstraint!
+    var imageTopConstraint: NSLayoutConstraint!
     var registrationConstraint: NSLayoutConstraint!
     var signInConstraint: NSLayoutConstraint!
+    let subView = AuthView()
     
-    let size = Size()
     
     init(authViewModel: AuthViewModel = .shared) {
         self.authViewModel = authViewModel
-        super.init(nibName: nil, bundle: nil)
+        super.init(customView: subView)
     }
     
     required init?(coder: NSCoder) {
@@ -35,61 +34,69 @@ class AuthController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         bindToViewModel()
-        
-        setupUI()
-        setupButtonsActions()
+        setupFields()
+        setupDynamicConstraint()
     }
     
-    override func loadView() {
-        super.loadView()
-        view = authView
+    private func setupFields() {
+        subView.textFieldName.delegate = self
+        subView.textFieldEmail.delegate = self
+        subView.textFieldPassword.delegate = self
     }
     
-    private func setupUI() {
-        view.backgroundColor = .backgroundColor
-        authView.textFieldName.delegate = self
-        authView.textFieldEmail.delegate = self
-        authView.textFieldPassword.delegate = self
-        
-        labelTopConstraint = authView.labelCreateAccount.topAnchor.constraint(equalTo: authView.topAnchor, constant: 280)
-        labelTopConstraint.isActive = true
+    private func setupDynamicConstraint() {
+        imageTopConstraint = subView.imageIcon.topAnchor.constraint(equalTo: subView.topAnchor, constant: size.scaleHeight(70))
+        imageTopConstraint.isActive = true
     }
     
-    private func changeConstraint(_ constant: CGFloat) {
-        UIView.animate(withDuration: 0.5) {
-            self.labelTopConstraint.constant = self.size.scaleHeight(constant)
+    private func changeConstraint(_ constant: CGFloat, _ begin: Bool) {
+        UIView.animate(withDuration: 0.2) {
+            self.imageTopConstraint.constant = self.size.scaleHeight(constant)
             self.view.layoutIfNeeded()
         }
     }
     
+    override func setupActions() {
+        subView.buttonRegistration.addTarget(self, action: #selector(buttonRegistrationTap), for: .touchUpInside)
+        subView.label2.addTarget(self, action: #selector(buttonLabel2), for: .touchUpInside)
+        subView.label4.addTarget(self, action: #selector(buttonLabel4), for: .touchUpInside)
+        subView.buttonSignIn.addTarget(self, action: #selector(buttonSignIn), for: .touchUpInside)
+        
+    }
+    
+}
+
+extension AuthController {
     @objc func buttonRegistrationTap() {
-        authViewModel.registration()
+        let vc = UserInfoController(name: authViewModel.currentName)
+        self.navigationController?.pushViewController(vc, animated: true)
+//        authViewModel.registration()
 //        authView.textFieldName.text = ""
 //        authView.textFieldEmail.text = ""
 //        authView.textFieldPassword.text = ""
-        buttonLabel2()
+//        buttonLabel2()
+        
     }
     
     @objc func buttonLabel2() {
         UIView.animate(withDuration: 0.2) {
-            self.authView.buttonRegistration.alpha = 0
-            self.authView.stackView1.alpha = 0
-            self.authView.textFieldName.alpha = 0
-            self.authView.buttonSignIn.alpha = 1
-            self.authView.stackView2.alpha = 1
+            self.subView.buttonRegistration.alpha = 0
+            self.subView.stackView1.alpha = 0
+            self.subView.textFieldName.alpha = 0
+            self.subView.buttonSignIn.alpha = 1
+            self.subView.stackView2.alpha = 1
             self.view.layoutIfNeeded()
         }
     }
     
     @objc func buttonLabel4() {
         UIView.animate(withDuration: 0.2) {
-            self.authView.buttonRegistration.alpha = 1
-            self.authView.stackView1.alpha = 1
-            self.authView.textFieldName.alpha = 1
-            self.authView.buttonSignIn.alpha = 0
-            self.authView.stackView2.alpha = 0
+            self.subView.buttonRegistration.alpha = 1
+            self.subView.stackView1.alpha = 1
+            self.subView.textFieldName.alpha = 1
+            self.subView.buttonSignIn.alpha = 0
+            self.subView.stackView2.alpha = 0
             self.view.layoutIfNeeded()
         }
     }
@@ -97,15 +104,6 @@ class AuthController: UIViewController {
     @objc func buttonSignIn() {
         authViewModel.logIn()
     }
-    
-    private func setupButtonsActions() {
-        authView.buttonRegistration.addTarget(self, action: #selector(buttonRegistrationTap), for: .touchUpInside)
-        authView.label2.addTarget(self, action: #selector(buttonLabel2), for: .touchUpInside)
-        authView.label4.addTarget(self, action: #selector(buttonLabel4), for: .touchUpInside)
-        authView.buttonSignIn.addTarget(self, action: #selector(buttonSignIn), for: .touchUpInside)
-        
-    }
-    
 }
 
 extension AuthController: UITextFieldDelegate {
@@ -116,11 +114,11 @@ extension AuthController: UITextFieldDelegate {
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        changeConstraint(180)
+        changeConstraint(-20, true)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        changeConstraint(280)
+        changeConstraint(70, false)
     }
 }
 
@@ -128,19 +126,19 @@ extension AuthController {
     
     private func bindToViewModel() {
         
-        authView.textFieldEmail.rx.text
+        subView.textFieldEmail.rx.text
             .orEmpty
             .debounce(.milliseconds(300), scheduler: MainScheduler.asyncInstance)
             .bind(to: authViewModel.email)
             .disposed(by: disposeBag)
         
-        authView.textFieldPassword.rx.text
+        subView.textFieldPassword.rx.text
             .orEmpty
             .debounce(.milliseconds(300), scheduler: MainScheduler.asyncInstance)
             .bind(to: authViewModel.password)
             .disposed(by: disposeBag)
         
-        authView.textFieldName.rx.text
+        subView.textFieldName.rx.text
             .orEmpty
             .debounce(.milliseconds(300), scheduler: MainScheduler.asyncInstance)
             .bind(to: authViewModel.name)

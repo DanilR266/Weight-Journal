@@ -9,9 +9,7 @@ import Foundation
 import UIKit
 
 
-class HomeView: UIView {
-    
-    let size = Size()
+class HomeView: BaseUIView {
     
     lazy var labelHello: UILabel = {
         let label = UILabel()
@@ -84,7 +82,7 @@ class HomeView: UIView {
     lazy var circle3 = UIView().circle(size: size)
     lazy var imageWater: UIImageView = {
         let img = UIImageView()
-        img.image = UIImage(named: "water")
+        img.image = UIImage(named: "waterIcon")
         img.translatesAutoresizingMaskIntoConstraints = false
         return img
     }()
@@ -94,7 +92,7 @@ class HomeView: UIView {
     lazy var circle4 = UIView().circle(size: size)
     lazy var imageTrain: UIImageView = {
         let img = UIImageView()
-        img.image = UIImage(named: "train")
+        img.image = UIImage(named: "trainIcon")
         img.translatesAutoresizingMaskIntoConstraints = false
         return img
     }()
@@ -117,7 +115,7 @@ class HomeView: UIView {
     }()
     
 
-    private func setupUI() {
+    override func setupView() {
         addSubview(labelHello)
         addSubview(labelName)
         addSubview(viewCitate)
@@ -147,7 +145,7 @@ class HomeView: UIView {
         buttonTrain.addSubview(imageTrain)
     }
     
-    private func setupConstraints() {
+    override func setupConstraints() {
         NSLayoutConstraint.activate([
             labelHello.topAnchor.constraint(equalTo: topAnchor, constant: size.scaleHeight(80)),
             labelHello.leadingAnchor.constraint(equalTo: leadingAnchor, constant: size.scaleWidth(24)),
@@ -199,16 +197,6 @@ class HomeView: UIView {
             image.topAnchor.constraint(equalTo: button.topAnchor, constant: size.scaleHeight(55)),
             image.leadingAnchor.constraint(equalTo: button.leadingAnchor, constant: size.scaleHeight(52))
         ])
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupUI()
-        setupConstraints()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
 }
