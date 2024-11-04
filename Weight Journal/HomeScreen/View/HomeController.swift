@@ -28,6 +28,7 @@ class HomeController: BaseUIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         bindToViewModel()
+        setStorageName()
         homeViewModel.fetchData()
     }
     
@@ -35,6 +36,10 @@ class HomeController: BaseUIViewController {
         subView.buttonWeight.addTarget(self, action: #selector(buttonWeightTap), for: .touchUpInside)
         subView.buttonCalories.addTarget(self, action: #selector(buttonCaloriesTap), for: .touchUpInside)
         subView.buttonWater.addTarget(self, action: #selector(buttonWaterTap), for: .touchUpInside)
+    }
+    
+    private func setStorageName() {
+        subView.labelHello.text = StringConstantsHome.helloText + homeViewModel.storageNameGet()
     }
 
 }

@@ -69,8 +69,10 @@ class AuthController: BaseUIViewController {
 
 extension AuthController {
     @objc func buttonRegistrationTap() {
-        let vc = UserInfoController(name: authViewModel.currentName)
-        self.navigationController?.pushViewController(vc, animated: true)
+        if authViewModel.registrationCurrent() {
+            let vc = UserInfoController(name: authViewModel.currentName, email: authViewModel.currentEmail, password: authViewModel.currentPassword)
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
 //        authViewModel.registration()
 //        authView.textFieldName.text = ""
 //        authView.textFieldEmail.text = ""

@@ -42,4 +42,8 @@ class HomeViewModel {
     func signOut() {
         authModel.signOut()
     }
+    
+    func storageNameGet() -> String {
+        return UserDefaults.standard.string(forKey: "UserName") ?? ""
+    }
 }

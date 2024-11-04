@@ -19,7 +19,7 @@ class FirebaseAuthenticate {
     
     var registrationCompletion: ((String?, String?, String?) -> Void)?
 
-    func registration(email: String, password: String, name: String) {
+    func registration(email: String, password: String, name: String, age: Int, calories: Int, height: Double, weightNow: Double, weightGoal: Double, sex: String) {
         auth.createUser(withEmail: email, password: password) { [weak self] result, error in
             guard let self = self else { return }
             
@@ -35,15 +35,15 @@ class FirebaseAuthenticate {
                 name: name,
                 email: email,
                 uid: result.user.uid,
-                caloriesGoal: 2000,
-                age: 0,
-                height: 0,
-                weightNow: 50,
-                weightGoal: 50,
-                sex: "M",
+                caloriesGoal: calories,
+                age: age,
+                height: height,
+                weightNow: weightNow,
+                weightGoal: weightGoal,
+                sex: sex,
                 caloriesNow: 0,
-                max: 50,
-                min: 50,
+                max: weightNow,
+                min: weightNow,
                 savedFood: [],
                 foodDate: [:],
                 weightDate: [:],
@@ -58,7 +58,9 @@ class FirebaseAuthenticate {
                         self.registrationCompletion?(nil, nil, nil)
                     } else {
                         print("User added successfully!")
+                        UserDefaults.standard.set(name, forKey: "UserName")
                         self.registrationCompletion?(email, password, name)
+                        self.logIn(email: email, password: password)
                     }
                 }
             } catch let encodingError {

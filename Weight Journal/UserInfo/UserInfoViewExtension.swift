@@ -12,6 +12,7 @@ import UIKit
 extension UserInfoView {
     
     func setupViewExtension() {
+        buttonNext.isEnabled = false
         addSubview(helloLabel)
         addSubview(textLabel)
         addSubview(buttonNext)
@@ -20,41 +21,42 @@ extension UserInfoView {
         stackCircle.addArrangedSubview(circle2)
         stackCircle.addArrangedSubview(circle3)
         
-        addSubview(pointOne)
-        addSubview(imageWomen)
-        addSubview(imageMan)
-        addSubview(labelWomen)
-        addSubview(labelMan)
+        addSubview(unView)
         
-        addSubview(pointTwo)
-        addSubview(stackViewOne)
+        unView.addSubview(pointOne)
+        unView.addSubview(imageWomen)
+        unView.addSubview(imageMan)
+        unView.addSubview(labelWomen)
+        unView.addSubview(labelMan)
+        unView.addSubview(pointTwo)
+        unView.addSubview(stackViewOne)
         stackViewOne.addArrangedSubview(labelOne)
         stackViewOne.addArrangedSubview(selectOne)
-        addSubview(stackViewTwo)
+        unView.addSubview(stackViewTwo)
         stackViewTwo.addArrangedSubview(labelTwo)
         stackViewTwo.addArrangedSubview(selectTwo)
-        addSubview(stackViewThree)
+        unView.addSubview(stackViewThree)
         stackViewThree.addArrangedSubview(labelThree)
         stackViewThree.addArrangedSubview(selectThree)
-        addSubview(stackMain)
+        unView.addSubview(stackMain)
         stackMain.addArrangedSubview(stackViewOne)
         stackMain.addArrangedSubview(stackViewTwo)
         stackMain.addArrangedSubview(stackViewThree)
-        addSubview(fieldAge)
-        addSubview(fieldHeight)
-        addSubview(fieldWeightNow)
-        addSubview(fieldWeightGoal)
+        unView.addSubview(fieldAge)
+        unView.addSubview(fieldHeight)
+        unView.addSubview(fieldWeightNow)
+        unView.addSubview(fieldWeightGoal)
         
-        addSubview(pointThree)
-        addSubview(descriptionCcal)
-        addSubview(labelGetCcal)
-        addSubview(descriptionCcal2)
-        addSubview(fieldCcal)
+        unView.addSubview(pointThree)
+        unView.addSubview(descriptionCcal)
+        unView.addSubview(labelGetCcal)
+        unView.addSubview(descriptionCcal2)
+        unView.addSubview(fieldCcal)
     }
     
     func setupConstraintsExtension() {
         NSLayoutConstraint.activate([
-            helloLabel.topAnchor.constraint(equalTo: topAnchor, constant: size.scaleHeight(44)),
+            helloLabel.topAnchor.constraint(equalTo: topAnchor, constant: size.scaleHeight(60)),
             helloLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: size.scaleWidth(27)),
             helloLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -size.scaleWidth(27)),
             
@@ -65,27 +67,29 @@ extension UserInfoView {
             stackCircle.centerXAnchor.constraint(equalTo: centerXAnchor),
             stackCircle.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -size.scaleHeight(120)),
             stackCircle.heightAnchor.constraint(equalToConstant: size.scaleHeight(10)),
-            stackCircle.leadingAnchor.constraint(equalTo: leadingAnchor),
-            stackCircle.trailingAnchor.constraint(equalTo: trailingAnchor),
             
             buttonNext.centerXAnchor.constraint(equalTo: centerXAnchor),
             buttonNext.bottomAnchor.constraint(equalTo: stackCircle.topAnchor, constant: -size.scaleHeight(30)),
             
+            unView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            unView.topAnchor.constraint(equalTo: textLabel.bottomAnchor),
+            unView.bottomAnchor.constraint(equalTo: buttonNext.topAnchor),
+            
             pointOne.leadingAnchor.constraint(equalTo: textLabel.leadingAnchor),
             
-            imageWomen.topAnchor.constraint(equalTo: pointOne.bottomAnchor, constant: size.scaleHeight(80)),
-            imageWomen.leadingAnchor.constraint(equalTo: pointOne.leadingAnchor, constant: size.scaleWidth(54)),
-            labelWomen.centerXAnchor.constraint(equalTo: imageWomen.centerXAnchor),
-            labelWomen.topAnchor.constraint(equalTo: imageWomen.bottomAnchor, constant: size.scaleHeight(21)),
+            labelMan.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -size.scaleWidth(76)),
+            labelMan.topAnchor.constraint(equalTo: pointOne.bottomAnchor, constant: size.scaleHeight(320)),
+            imageMan.bottomAnchor.constraint(equalTo: labelMan.topAnchor, constant: -size.scaleHeight(21)),
+            imageMan.centerXAnchor.constraint(equalTo: labelMan.centerXAnchor),
             
-            imageMan.topAnchor.constraint(equalTo: pointOne.bottomAnchor, constant: size.scaleHeight(80)),
-            imageMan.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -size.scaleWidth(81)),
-            labelMan.centerXAnchor.constraint(equalTo: imageMan.centerXAnchor),
-            labelMan.topAnchor.constraint(equalTo: imageMan.bottomAnchor, constant: size.scaleHeight(21)),
+            labelWomen.leadingAnchor.constraint(equalTo: leadingAnchor, constant: size.scaleWidth(76)),
+            labelWomen.topAnchor.constraint(equalTo: pointOne.bottomAnchor, constant: size.scaleHeight(320)),
+            imageWomen.bottomAnchor.constraint(equalTo: labelWomen.topAnchor, constant: -size.scaleHeight(21)),
+            imageWomen.centerXAnchor.constraint(equalTo: labelWomen.centerXAnchor),
             
             pointTwo.leadingAnchor.constraint(equalTo: textLabel.leadingAnchor),
             
-            stackMain.topAnchor.constraint(equalTo: pointTwo.bottomAnchor, constant: size.scaleHeight(47)),
+            stackMain.topAnchor.constraint(equalTo: pointTwo.bottomAnchor, constant: size.scaleHeight(27)),
             stackMain.centerXAnchor.constraint(equalTo: centerXAnchor),
             stackMain.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackMain.trailingAnchor.constraint(equalTo: trailingAnchor),

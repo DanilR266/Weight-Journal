@@ -70,7 +70,17 @@ class UserInfoView: BaseUIView {
         stack.axis = .horizontal
         stack.spacing = 5
         stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.widthAnchor.constraint(equalToConstant: size.scaleWidth(40)).isActive = true
         return stack
+    }()
+    
+    lazy var unView: UIView = {
+        let view = UIView()
+        view.layer.masksToBounds = true
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.widthAnchor.constraint(equalToConstant: size.screenWidth()).isActive = true
+        return view
     }()
     
     // MARK: Page one
@@ -86,20 +96,22 @@ class UserInfoView: BaseUIView {
         return label
     }()
     
-    lazy var imageWomen: UIImageView = {
-        let image = UIImageView()
-        image.image = UIImage(named: "womenImage")
-        image.contentMode = .scaleAspectFill
-        image.translatesAutoresizingMaskIntoConstraints = false
-        return image
+    lazy var imageWomen: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "womenImage"), for: [])
+        button.imageView?.contentMode = .scaleAspectFill
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.imageView?.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
-    lazy var imageMan: UIImageView = {
-        let image = UIImageView()
-        image.image = UIImage(named: "manImage")
-        image.contentMode = .scaleAspectFill
-        image.translatesAutoresizingMaskIntoConstraints = false
-        return image
+    lazy var imageMan: UIButton = {
+        let button = UIButton()
+        button.setImage( UIImage(named: "manImage"), for: [])
+        button.imageView?.contentMode = .scaleAspectFill
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.imageView?.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     lazy var labelWomen: UILabel = {
@@ -137,16 +149,16 @@ class UserInfoView: BaseUIView {
         return label
     }()
     
-    lazy var selectOne: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        view.layer.cornerRadius = size.scaleHeight(33/2)
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.black.cgColor
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.widthAnchor.constraint(equalToConstant: size.scaleWidth(33)).isActive = true
-        view.heightAnchor.constraint(equalToConstant: size.scaleWidth(33)).isActive = true
-        return view
+    lazy var selectOne: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .clear
+        button.layer.cornerRadius = size.scaleHeight(33/2)
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.widthAnchor.constraint(equalToConstant: size.scaleWidth(33)).isActive = true
+        button.heightAnchor.constraint(equalToConstant: size.scaleWidth(33)).isActive = true
+        return button
     }()
     
     lazy var labelOne: UILabel = {
@@ -160,16 +172,16 @@ class UserInfoView: BaseUIView {
         return label
     }()
     
-    lazy var selectTwo: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        view.layer.cornerRadius = size.scaleHeight(33/2)
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.black.cgColor
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.widthAnchor.constraint(equalToConstant: size.scaleWidth(33)).isActive = true
-        view.heightAnchor.constraint(equalToConstant: size.scaleWidth(33)).isActive = true
-        return view
+    lazy var selectTwo: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .clear
+        button.layer.cornerRadius = size.scaleHeight(33/2)
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.widthAnchor.constraint(equalToConstant: size.scaleWidth(33)).isActive = true
+        button.heightAnchor.constraint(equalToConstant: size.scaleWidth(33)).isActive = true
+        return button
     }()
     
     lazy var labelTwo: UILabel = {
@@ -183,16 +195,16 @@ class UserInfoView: BaseUIView {
         return label
     }()
     
-    lazy var selectThree: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        view.layer.cornerRadius = size.scaleHeight(33/2)
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.customYellow.cgColor
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.widthAnchor.constraint(equalToConstant: size.scaleWidth(33)).isActive = true
-        view.heightAnchor.constraint(equalToConstant: size.scaleWidth(33)).isActive = true
-        return view
+    lazy var selectThree: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .customYellow
+        button.layer.cornerRadius = size.scaleHeight(33/2)
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.widthAnchor.constraint(equalToConstant: size.scaleWidth(33)).isActive = true
+        button.heightAnchor.constraint(equalToConstant: size.scaleWidth(33)).isActive = true
+        return button
     }()
     
     lazy var labelThree: UILabel = {
@@ -209,6 +221,7 @@ class UserInfoView: BaseUIView {
     lazy var stackViewOne: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
+        stack.alignment = .center
         stack.spacing = size.scaleHeight(3)
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.widthAnchor.constraint(equalToConstant: size.scaleWidth(115)).isActive = true
@@ -219,6 +232,7 @@ class UserInfoView: BaseUIView {
     lazy var stackViewTwo: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
+        stack.alignment = .center
         stack.spacing = size.scaleHeight(3)
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.widthAnchor.constraint(equalToConstant: size.scaleWidth(115)).isActive = true
@@ -229,6 +243,7 @@ class UserInfoView: BaseUIView {
     lazy var stackViewThree: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
+        stack.alignment = .center
         stack.spacing = size.scaleHeight(3)
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.widthAnchor.constraint(equalToConstant: size.scaleWidth(115)).isActive = true
@@ -239,9 +254,11 @@ class UserInfoView: BaseUIView {
     lazy var stackMain: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
-        stack.spacing = size.scaleWidth(30)
+        stack.spacing = size.scaleWidth(10)
+        stack.alignment = .center
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.heightAnchor.constraint(equalToConstant: size.scaleHeight(60)).isActive = true
+//        stack.widthAnchor.constraint(equalToConstant: size.scaleWidth(323)).isActive = true
         return stack
     }()
     

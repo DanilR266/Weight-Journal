@@ -31,12 +31,11 @@ class AuthViewModel {
     init() {
         subscribeOnUpdate()
     }
-    func registration() {
-        if model.isNameValid(currentName) &&
-            model.isEmailValid(currentEmail) &&
-            model.isPasswordValid(currentPassword) {
-            authModel.registration(email: currentEmail, password: currentPassword, name: currentName)
-        }
+    
+    func registrationCurrent() -> Bool {
+        return model.isNameValid(currentName) &&
+        model.isEmailValid(currentEmail) &&
+        model.isPasswordValid(currentPassword)
     }
     
     func logIn() {
