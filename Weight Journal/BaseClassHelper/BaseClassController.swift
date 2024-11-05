@@ -25,6 +25,7 @@ class BaseUIViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.isNavigationBarHidden = true
         setupActions()
     }
     
@@ -34,5 +35,9 @@ class BaseUIViewController: UIViewController {
     }
     
     open func setupActions() { }
+    
+    @objc open func buttonBackAction() {
+        self.navigationController?.popViewController(animated: true)
+    }
     
 }

@@ -14,6 +14,8 @@ class FirebaseAuthenticate {
     
     static let shared = FirebaseAuthenticate()
     
+    var delegate: LoaderProtocol?
+    
     private var auth = Auth.auth()
     private let db = Firestore.firestore()
     
@@ -73,19 +75,31 @@ class FirebaseAuthenticate {
     
     func logIn(email: String, password: String) {
         auth.signIn(withEmail: email, password: password) { [weak self] result, error in
-            guard let self = self else { return }
+            guard let self = self else {
+                self?.delegate?.stopLoad()
+                return
+            }
             if let result = result {
                 self.db.collection("Users").whereField("email", isEqualTo: email).getDocuments { result, error in
-                    guard let result = result else { return }
+                    guard let result = result else {
+                        self.delegate?.stopLoad()
+                        return
+                    }
                     print(result.documents, "ResDoc")
-                    UserDefaults.standard.set(result.documents[0].documentID, forKey: "DocumentID")
+                    if !result.documents.isEmpty { UserDefaults.standard.set(result.documents[0].documentID, forKey: "DocumentID") }
+                    else {
+                        self.delegate?.stopLoad()
+                        return
+                    }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        self.delegate?.stopLoad()
                         UserDefaults.standard.set(true, forKey: "SignIn")
                         NotificationCenter.default.post(name: Notification.Name("AuthStatusChanged"), object: nil)
                     }
                 }
             }
             if let error = error {
+                self.delegate?.stopLoad()
                 print("Error auth:", error.localizedDescription)
             }
         }

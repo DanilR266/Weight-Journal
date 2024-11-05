@@ -11,7 +11,7 @@ import Foundation
 enum StringConstantsHome {
     
     static var helloText: String {
-        return "Приветсвую,"
+        return "Приветсвую, "
     }
     
     static var weightMeasurement: String {

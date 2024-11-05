@@ -21,7 +21,7 @@ class AuthController: BaseUIViewController {
     var registrationConstraint: NSLayoutConstraint!
     var signInConstraint: NSLayoutConstraint!
     let subView = AuthView()
-    
+    let loadView = LoadView()
     
     init(authViewModel: AuthViewModel = .shared) {
         self.authViewModel = authViewModel
@@ -34,6 +34,7 @@ class AuthController: BaseUIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        authViewModel.delegate = self
         bindToViewModel()
         setupFields()
         setupDynamicConstraint()
@@ -55,6 +56,15 @@ class AuthController: BaseUIViewController {
             self.imageTopConstraint.constant = self.size.scaleHeight(constant)
             self.view.layoutIfNeeded()
         }
+    }
+    
+    private func setLoader() {
+        loadView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(loadView)
+        NSLayoutConstraint.activate([
+            loadView.topAnchor.constraint(equalTo: subView.topAnchor),
+            loadView.leadingAnchor.constraint(equalTo: subView.leadingAnchor)
+        ])
     }
     
     override func setupActions() {
@@ -104,6 +114,7 @@ extension AuthController {
     }
     
     @objc func buttonSignIn() {
+        setLoader()
         authViewModel.logIn()
     }
 }
@@ -146,5 +157,14 @@ extension AuthController {
             .bind(to: authViewModel.name)
             .disposed(by: disposeBag)
     }
+    
+}
+
+extension AuthController: LoaderProtocol {
+    func stopLoad() {
+        loadView.removeFromSuperview()
+        view.layoutIfNeeded()
+    }
+    
     
 }

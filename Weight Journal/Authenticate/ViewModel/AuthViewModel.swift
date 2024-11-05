@@ -16,6 +16,8 @@ class AuthViewModel {
     
     let model = AuthModel()
     
+    var delegate: LoaderProtocol?
+    
     let email = PublishSubject<String>()
     let password = PublishSubject<String>()
     let name = PublishSubject<String>()
@@ -30,6 +32,7 @@ class AuthViewModel {
     
     init() {
         subscribeOnUpdate()
+        authModel.delegate = self
     }
     
     func registrationCurrent() -> Bool {
@@ -55,4 +58,13 @@ class AuthViewModel {
             self?.currentName = value
         }).disposed(by: disposeBag)
     }
+}
+
+
+extension AuthViewModel: LoaderProtocol {
+    func stopLoad() {
+        delegate?.stopLoad()
+    }
+    
+    
 }

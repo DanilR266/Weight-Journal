@@ -47,8 +47,8 @@ class HomeController: BaseUIViewController {
 extension HomeController {
     
     @objc func buttonWeightTap() {
-//        let vc = WeightScreenController()
-//        self.navigationController?.pushViewController(vc, animated: true)
+        let vc = WeightController(userInfo: homeViewModel.userInfo)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc func buttonCaloriesTap() {

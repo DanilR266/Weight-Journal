@@ -42,6 +42,48 @@ class HomeModel {
             }
         }
     }
+    
+    func setValuesForToday(weightDate: [String: String], completion: @escaping (Error?) -> Void) {
+        guard let documentID = documentID else {
+            print("Document ID is missing")
+            completion(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Document ID is missing"]))
+            return
+        }
+        
+        db.collection("Users").document(documentID).updateData(["weightDate": weightDate]) { error in
+            if let error = error {
+                print("Error updating weightNow: \(error)")
+                completion(error)
+            } else {
+                print("weightNow updated successfully")
+                completion(nil)
+            }
+        }
+    }
+
+    
+    func setUserInfo(_ userInfo: UserInfo, completion: @escaping (Error?) -> Void) {
+        guard let documentID = documentID else {
+            print("Document ID is missing")
+            completion(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Document ID is missing"]))
+            return
+        }
+        do {
+            try db.collection("Users").document(documentID).setData(from: userInfo) { error in
+                if let error = error {
+                    print("Error setting user info: \(error)")
+                    completion(error)
+                } else {
+                    print("User info updated successfully")
+                    completion(nil)
+                }
+            }
+        } catch let encodeError {
+            print("Error encoding user info: \(encodeError)")
+            completion(encodeError)
+        }
+    }
+
 
     
 }

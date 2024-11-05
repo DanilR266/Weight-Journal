@@ -14,6 +14,7 @@ import RxCocoa
 class UserInfoController: BaseUIViewController {
     
     let subView = UserInfoView()
+    let loadView = LoadView()
     let viewModel = UserInfoViewModel.shared
     let disposeBag = DisposeBag()
     
@@ -50,7 +51,7 @@ class UserInfoController: BaseUIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.isNavigationBarHidden = true
-        
+        viewModel.delegate = self
         bindToViewModel()
         
         setupTextFields()
@@ -148,6 +149,16 @@ class UserInfoController: BaseUIViewController {
         self.heightImageMan.constant = self.size.scaleHeight(heightMan)
     }
     
+    private func setLoader() {
+        loadView.isUserInteractionEnabled = false
+        loadView.translatesAutoresizingMaskIntoConstraints = false
+        subView.addSubview(loadView)
+        NSLayoutConstraint.activate([
+            loadView.topAnchor.constraint(equalTo: subView.topAnchor),
+            loadView.leadingAnchor.constraint(equalTo: subView.leadingAnchor)
+        ])
+    }
+    
     override func setupActions() {
         subView.buttonNext.addTarget(self, action: #selector(onButtonNextTap), for: .touchUpInside)
         subView.imageMan.addTarget(self, action: #selector(onButtonManTap), for: .touchUpInside)
@@ -191,6 +202,7 @@ extension UserInfoController {
                     self.view.layoutIfNeeded()
                 }
             default:
+                self.setLoader()
                 self.viewModel.registration(name: self.name, email: self.email, password: self.password)
             }
         }
@@ -304,7 +316,17 @@ extension UserInfoController {
         viewModel.getCcal
             .map { "\($0)" }
             .observe(on: MainScheduler.instance)
-            .bind(to: subView.labelGetCcal.rx.text)
+            .subscribe(onNext: { value in
+                self.subView.labelGetCcal.text = "\(value)"
+                
+            })
             .disposed(by: disposeBag)
+    }
+}
+
+
+extension UserInfoController: LoaderProtocol {
+    func stopLoad() {
+        loadView.removeFromSuperview()
     }
 }

@@ -12,17 +12,15 @@ import RxCocoa
 
 class UserInfoViewModel {
     
-    var currentAge: String = ""
-    var currentHeight: String = ""
-    var currentWeightNow: String = ""
-    var currentWeightGoal: String = ""
-    var currentCcal: String = ""
-    var getCalories: Int = 0
+    var currentAge: String = "", currentHeight: String = "", currentWeightNow: String = ""
+    var currentWeightGoal: String = "", currentCcal: String = "", getCalories: Int = 0
     
     let userModel = UserInfoModel()
     let authModel = AuthModel()
     var sex = SelectedSex.none
     var selectGoal = SelectGoal.regular
+    
+    var delegate: LoaderProtocol?
     
     let age = PublishSubject<String>()
     let height = PublishSubject<String>()
@@ -40,9 +38,11 @@ class UserInfoViewModel {
     
     init() {
         subscribeOnUpdate()
+        firebaseModel.delegate = delegate
     }
     
-    func checkValidString(textField: NSString?, range: NSRange, string: String, textFieldText: String?) -> Bool {
+    func checkValidString(textField: NSString?, range: NSRange,
+                          string: String, textFieldText: String?) -> Bool {
         if string.isEmpty {
             return true
         }
@@ -71,7 +71,10 @@ class UserInfoViewModel {
     
     
     func getCurrentCcal() {
-        getCcal.onNext(userModel.getCurrentCcal(Int(currentAge) ?? 20, Double(currentHeight) ?? 180, Double(currentWeightNow) ?? 70, sex: sex, selectGoal))
+        getCcal.onNext(userModel.getCurrentCcal(Int(currentAge) ?? 20,
+                                                Double(currentHeight) ?? 180,
+                                                Double(currentWeightNow) ?? 70,
+                                                sex, selectGoal))
     }
     
     
@@ -105,8 +108,20 @@ class UserInfoViewModel {
         if authModel.isEmailValid(email) &&
             authModel.isPasswordValid(password) &&
             authModel.isNameValid(name) {
-            firebaseModel.registration(email: email, password: password, name: name, age: Int(currentAge) ?? 20, calories: Int(currentCcal) ?? Int(getCalories), height: Double(currentHeight) ?? 180, weightNow: Double(currentWeightNow) ?? 70, weightGoal: Double(currentWeightGoal) ?? 70, sex: sex.rawValue)
+            firebaseModel.registration(email: email, password: password, name: name,
+                                       age: Int(currentAge) ?? 20, calories: Int(currentCcal) ?? Int(getCalories),
+                                       height: Double(currentHeight) ?? 180, weightNow: Double(currentWeightNow) ?? 70,
+                                       weightGoal: Double(currentWeightGoal) ?? 70, sex: sex.rawValue)
         }
     }
+    
+}
+
+
+extension UserInfoViewModel: LoaderProtocol {
+    func stopLoad() {
+        delegate?.stopLoad()
+    }
+    
     
 }
