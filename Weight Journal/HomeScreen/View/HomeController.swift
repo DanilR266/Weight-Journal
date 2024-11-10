@@ -29,7 +29,7 @@ class HomeController: BaseUIViewController {
         super.viewDidLoad()
         bindToViewModel()
         setStorageName()
-        homeViewModel.fetchData()
+//        homeViewModel.fetchData()
     }
     
     override func setupActions() {
@@ -39,7 +39,7 @@ class HomeController: BaseUIViewController {
     }
     
     private func setStorageName() {
-        subView.labelHello.text = StringConstantsHome.helloText + homeViewModel.storageNameGet()
+        subView.labelHello.text = "\(StringConstantsHome.helloText)\(homeViewModel.storageNameGet())"
     }
 
 }

@@ -25,6 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     @objc func authStatusChanged() {
         let auth = UserDefaults.standard.bool(forKey: "SignIn")
+        if auth { HomeViewModel.shared.fetchData() }
         let rootViewController = auth ? HomeController() : AuthController()
 //        let rootViewController = UserInfoController(name: "Hello")
         window?.rootViewController = UINavigationController(rootViewController: rootViewController)

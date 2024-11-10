@@ -272,9 +272,7 @@ extension UserInfoController: UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-
         viewModel.checkValidString(textField: textField.text as NSString?, range: range, string: string, textFieldText: textField.text)
-
     }
 
 }

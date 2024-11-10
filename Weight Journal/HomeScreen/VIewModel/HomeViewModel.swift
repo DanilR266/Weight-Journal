@@ -39,10 +39,11 @@ class HomeViewModel {
                 return
             }
             self.userName
-                .onNext("\(StringConstantsHome.helloText) \(user.name)")
+                .onNext("\(StringConstantsHome.helloText)\(user.name)")
             self.userNameTest = user.name
             self.userInfo = user
             self.setValuesForToday(user)
+            setUsernameStorage(user.name)
         })
     }
     
@@ -64,6 +65,7 @@ class HomeViewModel {
                 return
             }
             self.userInfo = userInfo
+            self.fetchData()
         }
     }
     
@@ -86,5 +88,9 @@ class HomeViewModel {
     
     func storageNameGet() -> String {
         return UserDefaults.standard.string(forKey: "UserName") ?? ""
+    }
+    
+    func setUsernameStorage(_ name: String) {
+        UserDefaults.standard.set(name, forKey: "UserName")
     }
 }

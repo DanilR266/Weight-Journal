@@ -34,6 +34,10 @@ class WeightViewModel {
         }
     }
     
+    func checkValidString(textField: NSString?, range: NSRange,
+                          string: String, textFieldText: String?) -> Bool {
+        return ValidationTextFieldInput.shared.checkValidString(textField: textField, range: range, string: string, textFieldText: textFieldText)
+    }
     
     private func bindToSubjects() {
         weightNow.subscribe(onNext: { [weak self] value in
@@ -45,6 +49,20 @@ class WeightViewModel {
     func updateDataToStorage() {
         guard let userInfo = userInfo else { return }
         homeViewModel.setDataToStorage(userInfo)
+    }
+    
+    func buttonPlusTap() {
+        guard var userInfo = userInfo else { return }
+        userInfo.weightNow += 0.5
+        weightNow.onNext(userInfo.weightNow)
+        self.userInfo = userInfo
+    }
+    
+    func buttonMinusTap() {
+        guard var userInfo = userInfo else { return }
+        userInfo.weightNow -= 0.5
+        weightNow.onNext(userInfo.weightNow)
+        self.userInfo = userInfo
     }
     
 }
