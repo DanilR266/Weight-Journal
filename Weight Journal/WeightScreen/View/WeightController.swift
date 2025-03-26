@@ -7,18 +7,15 @@
 
 import Foundation
 import UIKit
-import RxSwift
-import RxCocoa
 
 
-class WeightController: BaseUIViewController {
+class WeightController: RootController {
     
     let subView = WeightView()
     var tableView = UITableView()
     var graphView = GraphView()
     var userInfo: UserInfo?
     let viewModel: WeightViewModel
-    let disposeBag = DisposeBag()
     var data: [(key: String, value: String)] = []
     
     init(viewModel: WeightViewModel = .shared, userInfo: UserInfo?) {
@@ -38,8 +35,6 @@ class WeightController: BaseUIViewController {
         setupTextField()
         setupLabels()
         setupGraph()
-        
-        bindToSubjects()
     }
     
     private func setupTextField() {
@@ -64,16 +59,6 @@ class WeightController: BaseUIViewController {
             tableView.bottomAnchor.constraint(equalTo: subView.bottomAnchor, constant: -size.scaleHeight(100))
         ])
         
-        viewModel.sortedDict
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] data in
-                self?.viewModel.tableData = data
-                self?.data = data
-                self?.view.layoutIfNeeded()
-                self?.tableView.reloadData()
-            })
-            .disposed(by: disposeBag)
-        
         viewModel.sortedDictionary()
     }
     
@@ -82,15 +67,16 @@ class WeightController: BaseUIViewController {
         graphView.dataPoints = data.map { ($0.key, Double($0.value) ?? 0) }
 
         graphView.translatesAutoresizingMaskIntoConstraints = false
-        graphView.backgroundColor = .clear
+        graphView.backgroundColor = .graphColor
         graphView.layer.cornerRadius = 20
+        graphView.layer.masksToBounds = true
         
         subView.unViewGraph.addSubview(graphView)
         NSLayoutConstraint.activate([
-            graphView.topAnchor.constraint(equalTo: subView.unViewGraph.topAnchor),
-            graphView.leadingAnchor.constraint(equalTo: subView.unViewGraph.leadingAnchor),
-            graphView.trailingAnchor.constraint(equalTo: subView.unViewGraph.trailingAnchor),
-            graphView.bottomAnchor.constraint(equalTo: subView.unViewGraph.bottomAnchor),
+            graphView.topAnchor.constraint(equalTo: subView.unViewGraph.topAnchor, constant: size.scaleHeight(12)),
+            graphView.leadingAnchor.constraint(equalTo: subView.unViewGraph.leadingAnchor, constant: size.scaleWidth(32)),
+            graphView.trailingAnchor.constraint(equalTo: subView.unViewGraph.trailingAnchor, constant: -size.scaleWidth(12)),
+            graphView.bottomAnchor.constraint(equalTo: subView.unViewGraph.bottomAnchor, constant: -size.scaleHeight(24)),
         ])
     }
     
@@ -115,24 +101,6 @@ class WeightController: BaseUIViewController {
 }
 
 extension WeightController {
-    
-    func bindToSubjects() {
-        subView.fieldWeight.rx.text
-            .orEmpty
-            .debounce(.milliseconds(300), scheduler: MainScheduler.asyncInstance)
-            .map { Double($0) ?? 0.0 }
-            .bind(to: viewModel.weightNow)
-            .disposed(by: disposeBag)
-        
-        viewModel.weightNow
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] value in
-                self?.subView.labelNow.text = "Текущий: \(value) кг"
-                self?.view.layoutIfNeeded()
-            })
-            .disposed(by: disposeBag)
-        
-    }
     
     @objc func buttonMinusTap() {
         viewModel.buttonMinusTap()

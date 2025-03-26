@@ -9,12 +9,12 @@ import Foundation
 import UIKit
 
 
-class BaseUIView: UIView {
+class RootView: UIView {
     
     let size = Size()
     
-    open func setupConstraints() { }
-    open func setupView() { }
+    func setupConstraints() { }
+    func setupView() { }
     
     
     override init(frame: CGRect) {

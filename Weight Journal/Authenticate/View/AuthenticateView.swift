@@ -9,7 +9,9 @@ import Foundation
 import UIKit
 
 
-class AuthView: BaseUIView {
+class AuthenticateView: UIView {
+    
+    let size = Size.shared
     
     lazy var imageIcon: UIImageView = {
         let image = UIImageView()
@@ -38,7 +40,7 @@ class AuthView: BaseUIView {
         lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl
     }()
-    lazy var label2: UIButton = {
+    lazy var buttonLabelSignIn: UIButton = {
         let lbl = UIButton()
         lbl.setTitle(StringConstantsAuth.logIn, for: .normal)
         lbl.setTitleColor(.colorPurple, for: .normal)
@@ -63,7 +65,7 @@ class AuthView: BaseUIView {
         lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl
     }()
-    lazy var label4: UIButton = {
+    lazy var buttonLabelRegistration: UIButton = {
         let lbl = UIButton()
         lbl.setTitle(StringConstantsAuth.registration, for: .normal)
         lbl.setTitleColor(.colorPurple, for: .normal)
@@ -101,7 +103,7 @@ class AuthView: BaseUIView {
         return view
     }()
     
-    override func setupView() {
+    func setupView() {
         addSubview(imageIcon)
         addSubview(labelCreateAccount)
         addSubview(scrollView)
@@ -113,13 +115,13 @@ class AuthView: BaseUIView {
         buttonSignIn.alpha = 0
         addSubview(stackView1)
         stackView1.addArrangedSubview(label1)
-        stackView1.addArrangedSubview(label2)
+        stackView1.addArrangedSubview(buttonLabelSignIn)
         addSubview(stackView2)
         stackView2.addArrangedSubview(label3)
-        stackView2.addArrangedSubview(label4)
+        stackView2.addArrangedSubview(buttonLabelRegistration)
     }
     
-    override func setupConstraints() {
+    func setupConstraints() {
         NSLayoutConstraint.activate([
             imageIcon.centerXAnchor.constraint(equalTo: centerXAnchor),
             imageIcon.topAnchor.constraint(equalTo: topAnchor, constant: size.scaleHeight(70)),
@@ -153,4 +155,14 @@ class AuthView: BaseUIView {
         ])
     }
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.backgroundColor = .backgroundColor
+        setupView()
+        setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }

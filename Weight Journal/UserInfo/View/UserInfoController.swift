@@ -1,62 +1,48 @@
-//
-//  UserInfoController.swift
-//  Weight Journal
-//
-//  Created by Данила on 03.11.2024.
-//
+////
+////  UserInfoController.swift
+////  Weight Journal
+////
+////  Created by Данила on 03.11.2024.
+////
 
 import Foundation
 import UIKit
-import RxSwift
-import RxCocoa
 
 
-class UserInfoController: BaseUIViewController {
+class UserInfoController: UIViewController {
     
-    let subView = UserInfoView()
-    let loadView = LoadView()
-    let viewModel = UserInfoViewModel.shared
-    let disposeBag = DisposeBag()
+    private let size = Size.shared
     
-    var name: String
-    var email: String
-    var password: String
+    var presenter: UserInfoPresenterProtocol?
     
-    var page = 0
+    private let subView = UserInfoView()
+    private let loaderView = LoadView()
     
-    var positionPageOne: NSLayoutConstraint!
-    var positionPageTwo: NSLayoutConstraint!
-    var positionPageThree: NSLayoutConstraint!
+    private var positionPageOne: NSLayoutConstraint!
+    private var positionPageTwo: NSLayoutConstraint!
+    private var positionPageThree: NSLayoutConstraint!
     
-    var widthButtonWomen: NSLayoutConstraint!
-    var heightButtonWomen: NSLayoutConstraint!
-    var widthButtonMan: NSLayoutConstraint!
-    var heightButtonMan: NSLayoutConstraint!
-    var widthImageWomen: NSLayoutConstraint!
-    var heightImageWomen: NSLayoutConstraint!
-    var widthImageMan: NSLayoutConstraint!
-    var heightImageMan: NSLayoutConstraint!
-    
-    init(name: String, email: String, password: String) {
-        self.name = name
-        self.email = email
-        self.password = password
-        super.init(customView: subView)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    private var widthButtonWomen: NSLayoutConstraint!
+    private var heightButtonWomen: NSLayoutConstraint!
+    private var widthButtonMan: NSLayoutConstraint!
+    private var heightButtonMan: NSLayoutConstraint!
+    private var widthImageWomen: NSLayoutConstraint!
+    private var heightImageWomen: NSLayoutConstraint!
+    private var widthImageMan: NSLayoutConstraint!
+    private var heightImageMan: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.isNavigationBarHidden = true
-        viewModel.delegate = self
-        bindToViewModel()
-        
+        presenter?.viewDidload()
+        setupActions()
         setupTextFields()
-        setName()
         setupConstraints()
+    }
+    
+    override func loadView() {
+        super.loadView()
+        view = subView
     }
     
     private func setupTextFields() {
@@ -72,9 +58,7 @@ class UserInfoController: BaseUIViewController {
         positionPageTwo = subView.pointTwo.topAnchor.constraint(equalTo: subView.textLabel.bottomAnchor, constant: size.screenHeight())
         positionPageThree = subView.pointThree.topAnchor.constraint(equalTo: subView.textLabel.bottomAnchor, constant: size.screenHeight())
         
-        NSLayoutConstraint.activate([
-            positionPageOne, positionPageTwo, positionPageThree
-        ])
+        NSLayoutConstraint.activate([ positionPageOne, positionPageTwo, positionPageThree ])
         
         heightImageWomen = subView.imageWomen.heightAnchor.constraint(equalToConstant: size.scaleHeight(170))
         widthImageWomen = subView.imageWomen.widthAnchor.constraint(equalToConstant: size.scaleWidth(57))
@@ -91,75 +75,19 @@ class UserInfoController: BaseUIViewController {
         ])
     }
     
-    private func setName() {
-        subView.helloLabel.text = StringConstantsInfoUser.helloText + name
-    }
-    
-    private func setSelectGoal() {
-        DispatchQueue.main.async {
-            UIView.animate(withDuration: 0.1) {
-                switch self.viewModel.selectGoal {
-                case .down:
-                    self.subView.selectOne.backgroundColor = .customYellow
-                    self.subView.selectTwo.backgroundColor = .clear
-                    self.subView.selectThree.backgroundColor = .clear
-                    self.view.layoutIfNeeded()
-                case .up:
-                    self.subView.selectOne.backgroundColor = .clear
-                    self.subView.selectTwo.backgroundColor = .customYellow
-                    self.subView.selectThree.backgroundColor = .clear
-                    self.view.layoutIfNeeded()
-                case .regular:
-                    self.subView.selectOne.backgroundColor = .clear
-                    self.subView.selectTwo.backgroundColor = .clear
-                    self.subView.selectThree.backgroundColor = .customYellow
-                    self.view.layoutIfNeeded()
-                }
-            }
-        }
-    }
-    
-    private func setSizeImageManWomen() {
-        DispatchQueue.main.async {
-            UIView.animate(withDuration: 0.1) {
-                self.subView.buttonNext.isEnabled = true
-                switch self.viewModel.sex {
-                case .man:
-                    self.helpChangeConstraint(75, 217, 57, 170)
-                    self.view.layoutIfNeeded()
-                case .women:
-                    self.helpChangeConstraint(57, 170, 75, 217)
-                    self.view.layoutIfNeeded()
-                default:
-                    break
-                }
-            }
-        }
-    }
-    
     private func helpChangeConstraint(_ widthMan: CGFloat, _ heightMan: CGFloat, _ widthWomen: CGFloat, _ heightWomen: CGFloat) {
-        self.widthImageWomen.constant = self.size.scaleWidth(widthWomen)
-        self.heightImageWomen.constant = self.size.scaleHeight(heightWomen)
-        self.widthButtonWomen.constant = self.size.scaleWidth(widthWomen)
-        self.heightButtonWomen.constant = self.size.scaleHeight(heightWomen)
+        widthImageWomen.constant = size.scaleWidth(widthWomen)
+        heightImageWomen.constant = size.scaleHeight(heightWomen)
+        widthButtonWomen.constant = size.scaleWidth(widthWomen)
+        heightButtonWomen.constant = size.scaleHeight(heightWomen)
         
-        self.widthImageMan.constant = self.size.scaleWidth(widthMan)
-        self.widthButtonMan.constant = self.size.scaleWidth(widthMan)
-        self.heightButtonMan.constant = self.size.scaleHeight(heightMan)
-        self.heightImageMan.constant = self.size.scaleHeight(heightMan)
+        widthImageMan.constant = size.scaleWidth(widthMan)
+        widthButtonMan.constant = size.scaleWidth(widthMan)
+        heightButtonMan.constant = size.scaleHeight(heightMan)
+        heightImageMan.constant = size.scaleHeight(heightMan)
     }
     
-    private func setLoader() {
-        loadView.isUserInteractionEnabled = false
-        loadView.translatesAutoresizingMaskIntoConstraints = false
-        subView.addSubview(loadView)
-        NSLayoutConstraint.activate([
-            loadView.topAnchor.constraint(equalTo: subView.topAnchor),
-            loadView.leadingAnchor.constraint(equalTo: subView.leadingAnchor)
-        ])
-    }
-    
-    override func setupActions() {
+    private func setupActions() {
         subView.buttonNext.addTarget(self, action: #selector(onButtonNextTap), for: .touchUpInside)
         subView.imageMan.addTarget(self, action: #selector(onButtonManTap), for: .touchUpInside)
         subView.imageWomen.addTarget(self, action: #selector(onButtonWomenTap), for: .touchUpInside)
@@ -171,20 +99,36 @@ class UserInfoController: BaseUIViewController {
 }
 
 extension UserInfoController {
-    @objc func onButtonNextTap() {
-        
-        if page == 1 {
-            if viewModel.currentAge == "" ||
-                viewModel.currentHeight == "" ||
-                viewModel.currentWeightNow == "" ||
-                viewModel.currentWeightGoal == "" {
-                return
-            }
-        }
-        
+    
+    @objc private func onButtonNextTap() {
+        presenter?.buttonNextAction()
+    }
+    
+    @objc private func onButtonManTap() {
+        presenter?.buttonManAction()
+    }
+    @objc private func onButtonWomenTap() {
+        presenter?.buttonWomenAction()
+    }
+    
+    @objc private func onSelectOneTap() {
+        presenter?.buttonSelectDownAction()
+    }
+    
+    @objc private func onSelectTwoTap() {
+        presenter?.buttonSelectUpAction()
+    }
+    
+    @objc private func onSelectThreeTap() {
+        presenter?.buttonSelectRegularAction()
+    }
+}
+
+extension UserInfoController: UserInfoViewProtocol {
+    
+    func setNextPage(page: Int) {
         DispatchQueue.main.async {
-            self.page += 1
-            switch self.page {
+            switch page {
             case 1:
                 UIView.animate(withDuration: 0.4) {
                     self.positionPageOne.constant = -self.size.screenHeight()
@@ -193,7 +137,6 @@ extension UserInfoController {
                     self.view.layoutIfNeeded()
                 }
             case 2:
-                self.viewModel.getCurrentCcal()
                 UIView.animate(withDuration: 0.4) {
                     self.positionPageTwo.constant = -self.size.screenHeight()
                     self.positionPageThree.constant = self.size.scaleHeight(33)
@@ -201,41 +144,81 @@ extension UserInfoController {
                     self.subView.buttonNext.setTitle(StringConstantsInfoUser.go, for: [])
                     self.view.layoutIfNeeded()
                 }
-            default:
-                self.setLoader()
-                self.viewModel.registration(name: self.name, email: self.email, password: self.password)
+            default: break
             }
         }
     }
     
-    @objc func onButtonManTap() {
-        viewModel.sex = .man
-        setSizeImageManWomen()
-    }
-    @objc func onButtonWomenTap() {
-        viewModel.sex = .women
-        setSizeImageManWomen()
+    func setSizeImageManWomen(sex: SelectedSex) {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.1) { [weak self] in
+                guard let self else { return }
+                self.subView.buttonNext.isEnabled = true
+                switch sex {
+                case .man:
+                    self.helpChangeConstraint(75, 217, 57, 170)
+                    self.view.layoutIfNeeded()
+                case .women:
+                    self.helpChangeConstraint(57, 170, 75, 217)
+                    self.view.layoutIfNeeded()
+                default: break
+                }
+            }
+        }
     }
     
-    @objc func onSelectOneTap() {
-        viewModel.selectGoal = .down
-        setSelectGoal()
+    func setSelectGoal(goal: SelectGoal) {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.1) { [weak self] in
+                guard let self else { return }
+                self.subView.selectOne.backgroundColor = goal == .down ? .customYellow : .clear
+                self.subView.selectTwo.backgroundColor = goal == .up ? .customYellow : .clear
+                self.subView.selectThree.backgroundColor = goal == .regular ? .customYellow : .clear
+                self.view.layoutIfNeeded()
+            }
+        }
     }
     
-    @objc func onSelectTwoTap() {
-        viewModel.selectGoal = .up
-        setSelectGoal()
+    func updateViewDidload(name: String) {
+        subView.helloLabel.text = StringConstantsInfoUser.helloText + name
     }
     
-    @objc func onSelectThreeTap() {
-        viewModel.selectGoal = .regular
-        setSelectGoal()
+    func stopLoader() {
+        loaderView.removeFromSuperview()
+        view.layoutIfNeeded()
     }
+    
+    func setLoader() {
+        loaderView.isUserInteractionEnabled = false
+        loaderView.translatesAutoresizingMaskIntoConstraints = false
+        subView.addSubview(loaderView)
+        NSLayoutConstraint.activate([
+            loaderView.topAnchor.constraint(equalTo: subView.topAnchor),
+            loaderView.leadingAnchor.constraint(equalTo: subView.leadingAnchor)
+        ])
+        view.layoutIfNeeded()
+    }
+    
 }
 
 extension UserInfoController: UITextFieldDelegate {
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    private func handleTextFieldBegin(_ textField: UITextField) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            let constant = -self.size.scaleHeight(50)
+            let targetConstraint = textField == self.subView.fieldCcal
+                ? self.positionPageThree
+                : self.positionPageTwo
+            
+            UIView.animate(withDuration: 0.1) {
+                targetConstraint?.constant = constant
+                self.view.layoutIfNeeded()
+            }
+        }
+    }
+    
+    private func handleTextFieldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         DispatchQueue.main.async {
             if textField == self.subView.fieldCcal {
@@ -254,77 +237,16 @@ extension UserInfoController: UITextFieldDelegate {
         return true
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return handleTextFieldReturn(textField)
+    }
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        DispatchQueue.main.async {
-            if textField == self.subView.fieldCcal {
-                UIView.animate(withDuration: 0.1) {
-                    self.positionPageThree.constant = -self.size.scaleHeight(50)
-                    self.view.layoutIfNeeded()
-                }
-            }
-            else {
-                UIView.animate(withDuration: 0.1) {
-                    self.positionPageTwo.constant = -self.size.scaleHeight(50)
-                    self.view.layoutIfNeeded()
-                }
-            }
-        }
+        handleTextFieldBegin(textField)
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        viewModel.checkValidString(textField: textField.text as NSString?, range: range, string: string, textFieldText: textField.text)
+        presenter?.checkValidString(textField: textField.text as NSString?, range: range, string: string, textFieldText: textField.text) ?? false
     }
 
-}
-
-extension UserInfoController {
-    
-    private func bindToViewModel() {
-        
-        subView.fieldAge.rx.text
-            .orEmpty
-            .debounce(.milliseconds(300), scheduler: MainScheduler.asyncInstance)
-            .bind(to: viewModel.age)
-            .disposed(by: disposeBag)
-        
-        subView.fieldHeight.rx.text
-            .orEmpty
-            .debounce(.milliseconds(300), scheduler: MainScheduler.asyncInstance)
-            .bind(to: viewModel.height)
-            .disposed(by: disposeBag)
-        
-        subView.fieldWeightNow.rx.text
-            .orEmpty
-            .debounce(.milliseconds(300), scheduler: MainScheduler.asyncInstance)
-            .bind(to: viewModel.weightNow)
-            .disposed(by: disposeBag)
-        
-        subView.fieldWeightGoal.rx.text
-            .orEmpty
-            .debounce(.milliseconds(300), scheduler: MainScheduler.asyncInstance)
-            .bind(to: viewModel.weightGoal)
-            .disposed(by: disposeBag)
-        
-        subView.fieldCcal.rx.text
-            .orEmpty
-            .debounce(.milliseconds(300), scheduler: MainScheduler.asyncInstance)
-            .bind(to: viewModel.ccal)
-            .disposed(by: disposeBag)
-        
-        viewModel.getCcal
-            .map { "\($0)" }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { value in
-                self.subView.labelGetCcal.text = "\(value)"
-                
-            })
-            .disposed(by: disposeBag)
-    }
-}
-
-
-extension UserInfoController: LoaderProtocol {
-    func stopLoad() {
-        loadView.removeFromSuperview()
-    }
 }

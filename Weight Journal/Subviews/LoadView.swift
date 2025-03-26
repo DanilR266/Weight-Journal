@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 
-class LoadView: BaseUIView {
+class LoadView: RootView {
     
     lazy var unView: UIView = {
         let view = UIView()

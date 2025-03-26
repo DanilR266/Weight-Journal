@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 
-class BaseUIViewController: UIViewController {
+class RootController: UIViewController {
     
     let size = Size()
     var customView: UIView
@@ -34,7 +34,7 @@ class BaseUIViewController: UIViewController {
         self.view = customView
     }
     
-    open func setupActions() { }
+    func setupActions() { }
     
     @objc open func buttonBackAction() {
         self.navigationController?.popViewController(animated: true)

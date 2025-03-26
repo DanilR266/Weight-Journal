@@ -9,7 +9,9 @@ import Foundation
 import UIKit
 
 
-class UserInfoView: BaseUIView {
+class UserInfoView: UIView {
+    
+    let size = Size.shared
     
     lazy var helloLabel: UILabel = {
         let label = UILabel()
@@ -316,12 +318,23 @@ class UserInfoView: BaseUIView {
     lazy var fieldCcal = UITextField().authField(size: size, placeholder: StringConstantsInfoUser.goalCcal)
     
     
-    override func setupView() {
+    func setupView() {
         setupViewExtension()
     }
     
-    override func setupConstraints() {
+    func setupConstraints() {
         setupConstraintsExtension()
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.backgroundColor = .backgroundColor
+        setupView()
+        setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
 }

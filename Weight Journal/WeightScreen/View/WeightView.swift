@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 
-class WeightView: BaseUIView {
+class WeightView: RootView {
     
     lazy var buttonBack: UIButton = {
         let button = UIButton()

@@ -22,8 +22,7 @@ enum SelectGoal {
 
 
 class UserInfoModel {
-    
-    
+
     func getCurrentCcal(_ age: Int, _ height: Double, _ weight: Double, _ sex: SelectedSex, _ goal: SelectGoal) -> Int {
         let param1 = 10 * weight
         let param2 = 6.25 * height

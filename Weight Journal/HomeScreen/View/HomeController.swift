@@ -6,14 +6,11 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
 
-class HomeController: BaseUIViewController {
+class HomeController: RootController {
 
     private let subView = HomeView()
     private let homeViewModel: HomeViewModel
-    private let disposeBag = DisposeBag()
 
     
     init(homeViewModel: HomeViewModel = HomeViewModel.shared) {
@@ -27,7 +24,6 @@ class HomeController: BaseUIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        bindToViewModel()
         setStorageName()
 //        homeViewModel.fetchData()
     }
@@ -52,23 +48,12 @@ extension HomeController {
     }
     
     @objc func buttonCaloriesTap() {
-//        let vc = CaloriesScreenController()
-//        self.navigationController?.pushViewController(vc, animated: true)
+        let vc = CaloriesController(userInfo: homeViewModel.userInfo)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc func buttonWaterTap() {
         homeViewModel.signOut()
-    }
-    
-}
-
-extension HomeController {
-    
-    private func bindToViewModel() {
-        homeViewModel.userName
-            .observe(on: MainScheduler.instance)
-            .bind(to: subView.labelHello.rx.text)
-            .disposed(by: disposeBag)
     }
     
 }

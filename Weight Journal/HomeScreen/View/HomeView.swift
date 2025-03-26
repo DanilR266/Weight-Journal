@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 
-class HomeView: BaseUIView {
+class HomeView: RootView {
     
     lazy var labelHello: UILabel = {
         let label = UILabel()

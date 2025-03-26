@@ -39,14 +39,18 @@ class GraphView: UIView {
 
         context.strokePath()
 
-        context.setFillColor(UIColor.customYellow.cgColor)
         for (index, point) in sortedDataPoints.enumerated() {
             let x = margin + CGFloat(index) * xSpacing
             let y = graphHeight - CGFloat((point.value - minValue) / (maxValue - minValue)) * graphHeight + margin
             let pointSize: CGFloat = 8
             let pointRect = CGRect(x: x - pointSize / 2, y: y - pointSize / 2, width: pointSize, height: pointSize)
-            context.fillEllipse(in: pointRect)
 
+            context.setStrokeColor(UIColor.customYellow.cgColor)
+            context.setLineWidth(2.0)
+            context.strokeEllipse(in: pointRect)
+
+            context.setFillColor(UIColor.colorBlack1.cgColor)
+            context.fillEllipse(in: pointRect)
         }
     }
 }

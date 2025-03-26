@@ -6,9 +6,6 @@
 //
 
 import Foundation
-import RxSwift
-import RxCocoa
-
 
 class WeightViewModel {
     
@@ -16,10 +13,9 @@ class WeightViewModel {
     let model = WeightModel()
     let homeViewModel = HomeViewModel.shared
     static let shared = WeightViewModel()
-    let disposeBag = DisposeBag()
-    var weightNow: PublishSubject<Double> = PublishSubject<Double>()
+//    var weightNow: PublishSubject<Double> = PublishSubject<Double>()
     var currentWeightNow: Double = 0
-    var sortedDict: PublishSubject<Array<(key: String, value: String)>> = PublishSubject<Array<(key: String, value: String)>>()
+//    var sortedDict: PublishSubject<Array<(key: String, value: String)>> = PublishSubject<Array<(key: String, value: String)>>()
     var tableData: Array<(key: String, value: String)> = []
     
     
@@ -28,10 +24,10 @@ class WeightViewModel {
     }
     
     func sortedDictionary() {
-        if let userInfo = userInfo {
-            sortedDict.onNext(userInfo.weightDate.sorted(by: { $0.key < $1.key }))
-            weightNow.onNext(userInfo.weightNow)
-        }
+//        if let userInfo = userInfo {
+//            sortedDict.onNext(userInfo.weightDate.sorted(by: { $0.key < $1.key }))
+//            weightNow.onNext(userInfo.weightNow)
+//        }
     }
     
     func checkValidString(textField: NSString?, range: NSRange,
@@ -40,10 +36,10 @@ class WeightViewModel {
     }
     
     private func bindToSubjects() {
-        weightNow.subscribe(onNext: { [weak self] value in
-            self?.currentWeightNow = value
-            self?.userInfo?.weightNow = value
-        }).disposed(by: disposeBag)
+//        weightNow.subscribe(onNext: { [weak self] value in
+//            self?.currentWeightNow = value
+//            self?.userInfo?.weightNow = value
+//        }).disposed(by: disposeBag)
     }
     
     func updateDataToStorage() {
@@ -52,17 +48,17 @@ class WeightViewModel {
     }
     
     func buttonPlusTap() {
-        guard var userInfo = userInfo else { return }
-        userInfo.weightNow += 0.5
-        weightNow.onNext(userInfo.weightNow)
-        self.userInfo = userInfo
+//        guard var userInfo = userInfo else { return }
+//        userInfo.weightNow += 0.5
+//        weightNow.onNext(userInfo.weightNow)
+//        self.userInfo = userInfo
     }
     
     func buttonMinusTap() {
-        guard var userInfo = userInfo else { return }
-        userInfo.weightNow -= 0.5
-        weightNow.onNext(userInfo.weightNow)
-        self.userInfo = userInfo
+//        guard var userInfo = userInfo else { return }
+//        userInfo.weightNow -= 0.5
+//        weightNow.onNext(userInfo.weightNow)
+//        self.userInfo = userInfo
     }
     
 }

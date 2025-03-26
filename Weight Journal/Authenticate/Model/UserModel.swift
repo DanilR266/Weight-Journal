@@ -11,7 +11,7 @@ import Foundation
 struct UserInfo: Codable {
     var name: String
     var email: String
-    var uid: String
+    var id: Int
     var caloriesGoal: Int
     var age: Int
     var height: Double
@@ -21,8 +21,15 @@ struct UserInfo: Codable {
     var caloriesNow: Int
     var max: Double
     var min: Double
-    var savedFood: [String]
-    var foodDate: [String: String]
+    var savedFood: [Food]
+    var foodDate: [String: Food]
     var weightDate: [String: String]
     var caloriesDate: [String: String]
+}
+
+struct Food: Codable {
+    let id: Int
+    let name: String
+    let calories: Double
+    let nutrients: [Double]
 }

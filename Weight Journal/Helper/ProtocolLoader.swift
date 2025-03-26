@@ -7,7 +7,7 @@
 
 import Foundation
 
-
-protocol LoaderProtocol {
-    func stopLoad()
+protocol LoaderProtocol: AnyObject {
+    func stopLoader()
+    func setLoader()
 }
