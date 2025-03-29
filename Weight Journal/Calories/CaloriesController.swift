@@ -39,7 +39,7 @@ class CaloriesController: RootController {
     
     private func setupLabels() {
         if let userInfo = viewModel.userInfo {
-            subView.labelNow.text = "\(StringConstantsCalories.now) \(userInfo.caloriesNow)"
+//            subView.labelNow.text = "\(StringConstantsCalories.now) \(userInfo.caloriesNow)"
             subView.labelGoal.text = "\(StringConstantsCalories.goal) \(userInfo.caloriesGoal)"
         }
     }

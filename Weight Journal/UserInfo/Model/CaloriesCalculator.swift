@@ -7,22 +7,7 @@
 
 import Foundation
 
-
-enum SelectedSex: String {
-    case man = "M"
-    case women = "W"
-    case none = "N"
-}
-
-enum SelectGoal {
-    case up
-    case down
-    case regular
-}
-
-
-class UserInfoModel {
-
+class CaloriesCalculator {
     func getCurrentCcal(_ age: Int, _ height: Double, _ weight: Double, _ sex: SelectedSex, _ goal: SelectGoal) -> Int {
         let param1 = 10 * weight
         let param2 = 6.25 * height
@@ -51,5 +36,4 @@ class UserInfoModel {
             return 0
         }
     }
-    
 }

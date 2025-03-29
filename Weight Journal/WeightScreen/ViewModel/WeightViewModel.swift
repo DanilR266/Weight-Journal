@@ -11,7 +11,7 @@ class WeightViewModel {
     
     var userInfo: UserInfo?
     let model = WeightModel()
-    let homeViewModel = HomeViewModel.shared
+//    let homeViewModel = HomeViewModel.shared
     static let shared = WeightViewModel()
 //    var weightNow: PublishSubject<Double> = PublishSubject<Double>()
     var currentWeightNow: Double = 0
@@ -44,7 +44,7 @@ class WeightViewModel {
     
     func updateDataToStorage() {
         guard let userInfo = userInfo else { return }
-        homeViewModel.setDataToStorage(userInfo)
+//        homeViewModel.setDataToStorage(userInfo)
     }
     
     func buttonPlusTap() {

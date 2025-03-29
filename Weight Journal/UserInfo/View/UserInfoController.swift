@@ -127,7 +127,8 @@ extension UserInfoController {
 extension UserInfoController: UserInfoViewProtocol {
     
     func setNextPage(page: Int) {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
             switch page {
             case 1:
                 UIView.animate(withDuration: 0.4) {
@@ -144,7 +145,13 @@ extension UserInfoController: UserInfoViewProtocol {
                     self.subView.buttonNext.setTitle(StringConstantsInfoUser.go, for: [])
                     self.view.layoutIfNeeded()
                 }
-            default: break
+            default:
+                let age = self.subView.fieldAge.text ?? ""
+                let height = self.subView.fieldHeight.text ?? ""
+                let weightNow = self.subView.fieldWeightNow.text ?? ""
+                let weightGoal = self.subView.fieldWeightGoal.text ?? ""
+                let caloriesGoal = self.subView.fieldCcal.text ?? ""
+                self.presenter?.setUserInfo(age: age, height: height, weightNow: weightNow, weightGoal: weightGoal, caloriesGoal: caloriesGoal)
             }
         }
     }
@@ -220,7 +227,8 @@ extension UserInfoController: UITextFieldDelegate {
     
     private func handleTextFieldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
             if textField == self.subView.fieldCcal {
                 UIView.animate(withDuration: 0.1) {
                     self.positionPageThree.constant = self.size.scaleHeight(33)

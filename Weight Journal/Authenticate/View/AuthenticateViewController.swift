@@ -53,13 +53,15 @@ class AuthenticateViewController: UIViewController {
         subView.buttonSignIn.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         
     }
-    
 }
 
 extension AuthenticateViewController: AuthenticateViewProtocol {
     
     func pushViewController(vc: UIViewController) {
-        navigationController?.pushViewController(vc, animated: true)
+        guard let sceneDelegate = UIApplication.shared.connectedScenes
+            .first?.delegate as? SceneDelegate else { return }
+        let navVC = UINavigationController(rootViewController: vc)
+        sceneDelegate.window?.rootViewController = navVC
     }
     
     func changeConstraint(_ constant: CGFloat, _ begin: Bool) {

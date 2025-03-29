@@ -9,13 +9,14 @@ import Foundation
 
 
 
-class UserInfoPresenter: UserInfoPresenterProtocol {
+class UserInfoPresenter {
     
-    private let userModel = UserInfoModel()
+    private let userModel = CaloriesCalculator()
     private var sex = SelectedSex.none
     private var selectGoal = SelectGoal.regular
     private let validateInput = ValidationTextFieldInput.shared
     private var viewPages = 0
+    private var calculateCalories = 0
     
     private weak var view: UserInfoViewProtocol?
     private let userInfoModelServer: UserInfoServerManagerProtocol
@@ -33,14 +34,21 @@ class UserInfoPresenter: UserInfoPresenterProtocol {
         self.email = email
         self.userId = userId
     }
+}
 
-    
-    var userInfo: UserInfo?
-    
-    func registrationUser(age: Int, height: Double, weightNow: Double, weightGoal: Double, caloriesGoal: Int) {
-        let user = UserInfo(name: name, email: email, id: userId, caloriesGoal: caloriesGoal, age: age, height: height, weightNow: weightNow, weightGoal: weightGoal, sex: sex.rawValue, caloriesNow: 0, max: 0, min: 0, savedFood: [], foodDate: [:], weightDate: [:], caloriesDate: [:])
+extension UserInfoPresenter: UserInfoPresenterProtocol {
+    func setUserInfo(age: String, height: String, weightNow: String, weightGoal: String, caloriesGoal: String) {
+        guard !age.isEmpty, !height.isEmpty, !weightNow.isEmpty, !weightGoal.isEmpty
+        else { return }
+        guard let age = Int(age), let height = Double(height), let weightNow = Double(weightNow),
+              let weightGoal = Double(weightGoal)
+        else { return }
+        if !caloriesGoal.isEmpty, let calories = Int(caloriesGoal) {
+            calculateCalories = calories
+        }
+        let user = UserInfo(name: name, email: email, userID: userId, caloriesGoal: calculateCalories, age: age, height: height, weightNow: weightNow, weightGoal: weightGoal, sex: sex.rawValue)
         
-        registrationUser(userInfo: user)
+        setUserInfo(userInfo: user)
     }
     
     func checkValidString(textField: NSString?, range: NSRange,
@@ -81,16 +89,15 @@ class UserInfoPresenter: UserInfoPresenterProtocol {
         viewPages += 1
         view?.setNextPage(page: viewPages)
     }
-    
 }
 
 private extension UserInfoPresenter {
-    
-    func registrationUser(userInfo: UserInfo) {
+    func setUserInfo(userInfo: UserInfo) {
         view?.setLoader()
         Task {
             do {
                 let success = try await userInfoModelServer.setUserInfo(user: userInfo)
+                print(success.text)
             } catch {
                 print("Error set user")
             }
@@ -99,5 +106,4 @@ private extension UserInfoPresenter {
             }
         }
     }
-    
 }

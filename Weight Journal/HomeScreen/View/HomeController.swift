@@ -7,53 +7,54 @@
 
 import UIKit
 
-class HomeController: RootController {
+class HomeController: UIViewController {
 
     private let subView = HomeView()
-    private let homeViewModel: HomeViewModel
-
+    private let loaderView = LoadView()
     
-    init(homeViewModel: HomeViewModel = HomeViewModel.shared) {
-        self.homeViewModel = homeViewModel
-        super.init(customView: subView)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    var presenter: HomePresenterProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setStorageName()
-//        homeViewModel.fetchData()
+        navigationController?.isNavigationBarHidden = true
+        presenter?.fetchData()
     }
     
-    override func setupActions() {
-        subView.buttonWeight.addTarget(self, action: #selector(buttonWeightTap), for: .touchUpInside)
-        subView.buttonCalories.addTarget(self, action: #selector(buttonCaloriesTap), for: .touchUpInside)
-        subView.buttonWater.addTarget(self, action: #selector(buttonWaterTap), for: .touchUpInside)
+    override func loadView() {
+        super.loadView()
+        self.view = subView
     }
     
-    private func setStorageName() {
-        subView.labelHello.text = "\(StringConstantsHome.helloText)\(homeViewModel.storageNameGet())"
+    func setupActions() {
+        subView.buttonWeight.addTarget(self, action: #selector(buttonWeightTapped), for: .touchUpInside)
+        subView.buttonCalories.addTarget(self, action: #selector(buttonCaloriesTapped), for: .touchUpInside)
+        subView.buttonWater.addTarget(self, action: #selector(buttonWaterTapped), for: .touchUpInside)
     }
+}
 
+extension HomeController: HomeViewProtocol {
+    func moveToViewController(vc: UIViewController) {
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func reloadData(name: String) {
+        subView.setNameLabel(name: name)
+        view.layoutIfNeeded()
+    }
 }
 
 extension HomeController {
     
-    @objc func buttonWeightTap() {
-        let vc = WeightController(userInfo: homeViewModel.userInfo)
-        self.navigationController?.pushViewController(vc, animated: true)
+    @objc func buttonWeightTapped() {
+        presenter?.buttonWeightTapped()
     }
     
-    @objc func buttonCaloriesTap() {
-        let vc = CaloriesController(userInfo: homeViewModel.userInfo)
-        self.navigationController?.pushViewController(vc, animated: true)
+    @objc func buttonCaloriesTapped() {
+        presenter?.buttonCaloriesTapped()
     }
     
-    @objc func buttonWaterTap() {
-        homeViewModel.signOut()
+    @objc func buttonWaterTapped() {
+//        homeViewModel.signOut()
     }
     
 }

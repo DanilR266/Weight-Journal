@@ -8,20 +8,20 @@
 import Foundation
 
 
-class AuthenticatePresenter: AuthenticatePresenteeProtocol {
+class AuthenticatePresenter {
     
-    private let authenticateModel = AuthModel()
+    private let authenticateModel = AuthenticateValidateModel()
     private weak var view: AuthenticateViewProtocol?
     
     private let authenticateModelServer: AuthorizationManagerProtocol
-    
-    
     
     init(view: AuthenticateViewProtocol, authenticateModelServer: AuthorizationManagerProtocol = AuthorizationManager.shared) {
         self.view = view
         self.authenticateModelServer = authenticateModelServer
     }
-    
+}
+
+extension AuthenticatePresenter: AuthenticatePresenteeProtocol {
     func registerUser(name: String, email: String, password: String) {
         guard
             !name.isEmpty, !email.isEmpty, !password.isEmpty,
@@ -51,7 +51,6 @@ class AuthenticatePresenter: AuthenticatePresenteeProtocol {
     func changeConstraintsView(_ constant: CGFloat, _ begin: Bool) {
         view?.changeConstraint(constant, begin)
     }
-
 }
 
 extension AuthenticatePresenter {
@@ -61,7 +60,11 @@ extension AuthenticatePresenter {
         Task {
             do {
                 let success = try await authenticateModelServer.loginUser(user: user)
-                try TokenStorage.save(token: success.access_token)
+                await MainActor.run { [weak self] in
+                    self?.view?.stopLoader()
+                    let vc = HomeBuilder.build()
+                    self?.view?.pushViewController(vc: vc)
+                }
             }
             catch {
                 print("Error auth: \(error)")

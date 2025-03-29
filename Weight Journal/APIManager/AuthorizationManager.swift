@@ -41,7 +41,7 @@ final class AuthorizationManager: AuthorizationManagerProtocol {
     static let shared = AuthorizationManager()
     
     func registrationUser(user: UserRegistration) async throws -> UserRegistrationSuccess {
-        var urlRequest = URLRequest(url: URL(string: ServerConstants.authorization)!)
+        var urlRequest = URLRequest(url: URL(string: ServerConstants.postAuthorization)!)
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
@@ -57,7 +57,7 @@ final class AuthorizationManager: AuthorizationManagerProtocol {
     }
     
     func loginUser(user: UserLogin) async throws -> UserLoginSuccess {
-        var urlRequest = URLRequest(url: URL(string: ServerConstants.login)!)
+        var urlRequest = URLRequest(url: URL(string: ServerConstants.postLogin)!)
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
@@ -69,6 +69,8 @@ final class AuthorizationManager: AuthorizationManagerProtocol {
             throw NSError(domain: "Invalid response", code: -1, userInfo: nil)
         }
         let answer = try JSONDecoder().decode(UserLoginSuccess.self, from: data)
+        try TokenStorage.save(token: answer.access_token)
+        print("Token1: ", answer.access_token)
         return answer
     }
 }

@@ -14,7 +14,7 @@ protocol UserInfoPresenterProtocol: AnyObject {
     /// checkView
     func checkValidString(textField: NSString?, range: NSRange, string: String, textFieldText: String?) -> Bool
     /// registration
-    func registrationUser(age: Int, height: Double, weightNow: Double, weightGoal: Double, caloriesGoal: Int)
+    func setUserInfo(age: String, height: String, weightNow: String, weightGoal: String, caloriesGoal: String)
     /// buttonsAction
     func buttonManAction()
     func buttonWomenAction()

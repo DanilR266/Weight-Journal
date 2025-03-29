@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class AuthenticateBuilder {
+final class AuthenticateBuilder {
     static func authenticateBuild() -> UIViewController {
         let view = AuthenticateViewController()
         let presenter = AuthenticatePresenter(view: view)

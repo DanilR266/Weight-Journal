@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class UserInfoBuilder {
+final class UserInfoBuilder {
     static func build(name: String, email: String, userId: Int) -> UIViewController {
         let view = UserInfoController()
         let presenter = UserInfoPresenter(view: view, name: name, email: email, userId: userId)

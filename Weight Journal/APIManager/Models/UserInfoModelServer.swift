@@ -1,30 +1,31 @@
 //
-//  UserModel.swift
+//  UserInfoModelServer.swift
 //  Weight Journal
 //
-//  Created by Данила on 25.10.2024.
+//  Created by Данила on 27.03.2025.
 //
 
 import Foundation
 
-
 struct UserInfo: Codable {
     var name: String
     var email: String
-    var id: Int
+    var userID: Int
     var caloriesGoal: Int
     var age: Int
     var height: Double
     var weightNow: Double
     var weightGoal: Double
     var sex: String
-    var caloriesNow: Int
-    var max: Double
-    var min: Double
-    var savedFood: [Food]
-    var foodDate: [String: Food]
-    var weightDate: [String: String]
-    var caloriesDate: [String: String]
+    
+    enum CodingKeys: String, CodingKey {
+        case userID = "user_id"
+        case name
+        case email, age, sex, height
+        case weightNow = "weight_now"
+        case weightGoal = "weight_goal"
+        case caloriesGoal = "calories_goal"
+    }
 }
 
 struct Food: Codable {
