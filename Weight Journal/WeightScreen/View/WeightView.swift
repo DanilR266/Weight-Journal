@@ -9,8 +9,10 @@ import Foundation
 import UIKit
 
 
-class WeightView: RootView {
+class WeightView: UIView {
     
+    private let size = Size.shared
+    private var graphView = GraphView()
     lazy var buttonBack: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "buttonBack"), for: [])
@@ -40,7 +42,7 @@ class WeightView: RootView {
         view.backgroundColor = .colorFhy
         view.layer.cornerRadius = 10
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.widthAnchor.constraint(equalToConstant: size.scaleWidth(233)).isActive = true
+        view.widthAnchor.constraint(equalToConstant: size.scaleWidth(343)).isActive = true
         view.heightAnchor.constraint(equalToConstant: size.scaleHeight(94)).isActive = true
         return view
     }()
@@ -50,11 +52,11 @@ class WeightView: RootView {
         button.setImage(UIImage(named: "buttonMinus"), for: [])
         button.imageView?.contentMode = .scaleAspectFit
         button.imageView?.translatesAutoresizingMaskIntoConstraints = false
-        button.imageView?.widthAnchor.constraint(equalToConstant: size.scaleWidth(30)).isActive = true
-        button.imageView?.heightAnchor.constraint(equalToConstant: size.scaleWidth(30)).isActive = true
+        button.imageView?.widthAnchor.constraint(equalToConstant: size.scaleWidth(60)).isActive = true
+        button.imageView?.heightAnchor.constraint(equalToConstant: size.scaleWidth(60)).isActive = true
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.widthAnchor.constraint(equalToConstant: size.scaleWidth(30)).isActive = true
-        button.heightAnchor.constraint(equalToConstant: size.scaleWidth(30)).isActive = true
+        button.widthAnchor.constraint(equalToConstant: size.scaleWidth(60)).isActive = true
+        button.heightAnchor.constraint(equalToConstant: size.scaleWidth(60)).isActive = true
         return button
     }()
     
@@ -63,21 +65,22 @@ class WeightView: RootView {
         button.setImage(UIImage(named: "buttonPlus"), for: [])
         button.imageView?.contentMode = .scaleAspectFit
         button.imageView?.translatesAutoresizingMaskIntoConstraints = false
-        button.imageView?.widthAnchor.constraint(equalToConstant: size.scaleWidth(30)).isActive = true
-        button.imageView?.heightAnchor.constraint(equalToConstant: size.scaleWidth(30)).isActive = true
+        button.imageView?.widthAnchor.constraint(equalToConstant: size.scaleWidth(60)).isActive = true
+        button.imageView?.heightAnchor.constraint(equalToConstant: size.scaleWidth(60)).isActive = true
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.widthAnchor.constraint(equalToConstant: size.scaleWidth(30)).isActive = true
-        button.heightAnchor.constraint(equalToConstant: size.scaleWidth(30)).isActive = true
+        button.widthAnchor.constraint(equalToConstant: size.scaleWidth(60)).isActive = true
+        button.heightAnchor.constraint(equalToConstant: size.scaleWidth(60)).isActive = true
         return button
     }()
     
     lazy var fieldWeight: UITextField = {
         let field = UITextField()
+        field.text = "0"
         field.textColor = .black
-        field.font = .systemFont(ofSize: 20, weight: .regular)
+        field.font = .systemFont(ofSize: 32, weight: .regular)
         field.textAlignment = .center
         field.translatesAutoresizingMaskIntoConstraints = false
-        field.heightAnchor.constraint(equalToConstant: size.scaleHeight(30)).isActive = true
+//        field.heightAnchor.constraint(equalToConstant: size.scaleHeight(30)).isActive = true
         return field
     }()
     
@@ -122,7 +125,7 @@ class WeightView: RootView {
         return label
     }()
     
-    override func setupView() {
+    func setupView() {
         addSubview(buttonBack)
         addSubview(titleLabel)
         addSubview(unViewWeight)
@@ -132,10 +135,9 @@ class WeightView: RootView {
         addSubview(labelNow)
         addSubview(labelGoal)
         addSubview(unViewGraph)
-        addSubview(labelHistory)
     }
     
-    override func setupConstraints() {
+    func setupConstraints() {
         NSLayoutConstraint.activate([
             buttonBack.topAnchor.constraint(equalTo: topAnchor, constant: size.scaleHeight(62)),
             buttonBack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: size.scaleWidth(16)),
@@ -145,8 +147,14 @@ class WeightView: RootView {
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             
+            labelNow.leadingAnchor.constraint(equalTo: leadingAnchor, constant: size.scaleWidth(12)),
+            labelNow.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: size.scaleHeight(22)),
+            
+            labelGoal.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -size.scaleWidth(12)),
+            labelGoal.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: size.scaleHeight(22)),
+            
             unViewWeight.centerXAnchor.constraint(equalTo: centerXAnchor),
-            unViewWeight.topAnchor.constraint(equalTo: buttonBack.bottomAnchor, constant: size.scaleHeight(22)),
+            unViewWeight.topAnchor.constraint(equalTo: labelGoal.bottomAnchor, constant: size.scaleHeight(34)),
             
             buttonMinus.centerYAnchor.constraint(equalTo: unViewWeight.centerYAnchor),
             buttonMinus.leadingAnchor.constraint(equalTo: unViewWeight.leadingAnchor, constant: size.scaleWidth(30)),
@@ -158,17 +166,39 @@ class WeightView: RootView {
             fieldWeight.leadingAnchor.constraint(equalTo: buttonMinus.trailingAnchor, constant: 3),
             fieldWeight.trailingAnchor.constraint(equalTo: buttonPlus.leadingAnchor, constant: -3),
             
-            labelNow.leadingAnchor.constraint(equalTo: leadingAnchor, constant: size.scaleWidth(12)),
-            labelNow.topAnchor.constraint(equalTo: unViewWeight.bottomAnchor, constant: size.scaleHeight(8)),
-            
-            labelGoal.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -size.scaleWidth(12)),
-            labelGoal.topAnchor.constraint(equalTo: unViewWeight.bottomAnchor, constant: size.scaleHeight(8)),
-            
             unViewGraph.centerXAnchor.constraint(equalTo: centerXAnchor),
-            unViewGraph.topAnchor.constraint(equalTo: labelNow.bottomAnchor, constant: size.scaleHeight(11)),
-            
-            labelHistory.leadingAnchor.constraint(equalTo: unViewGraph.leadingAnchor),
-            labelHistory.topAnchor.constraint(equalTo: unViewGraph.bottomAnchor, constant: size.scaleHeight(20)),
+            unViewGraph.topAnchor.constraint(equalTo: unViewWeight.bottomAnchor, constant: size.scaleHeight(24)),
         ])
+    }
+    
+    private func setupGraph() {
+        graphView.translatesAutoresizingMaskIntoConstraints = false
+        graphView.backgroundColor = .graphColor
+        graphView.layer.cornerRadius = 20
+        graphView.layer.masksToBounds = true
+        
+        unViewGraph.addSubview(graphView)
+        NSLayoutConstraint.activate([
+            graphView.topAnchor.constraint(equalTo: unViewGraph.topAnchor, constant: size.scaleHeight(12)),
+            graphView.leadingAnchor.constraint(equalTo: unViewGraph.leadingAnchor, constant: size.scaleWidth(32)),
+            graphView.trailingAnchor.constraint(equalTo: unViewGraph.trailingAnchor, constant: -size.scaleWidth(12)),
+            graphView.bottomAnchor.constraint(equalTo: unViewGraph.bottomAnchor, constant: -size.scaleHeight(24)),
+        ])
+    }
+    
+    func setGraphData(data: [TableViewHistoryData]) {
+        graphView.dataPoints = data
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .backgroundColor
+        setupView()
+        setupConstraints()
+        setupGraph()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

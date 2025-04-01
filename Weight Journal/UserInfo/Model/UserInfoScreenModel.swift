@@ -13,8 +13,8 @@ enum SelectedSex: String {
     case none = "N"
 }
 
-enum SelectGoal {
-    case up
-    case down
-    case regular
+enum SelectGoal: String {
+    case up = "up"
+    case down = "down"
+    case regular = "regular"
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 protocol UserInfoViewProtocol: AnyObject, LoaderProtocol {
     
@@ -14,4 +15,7 @@ protocol UserInfoViewProtocol: AnyObject, LoaderProtocol {
     func setSelectGoal(goal: SelectGoal)
     func setSizeImageManWomen(sex: SelectedSex)
     func setNextPage(page: Int)
+    func setCaloriesCalculate(calories: String)
+    /// moved screen
+    func moveToHomeScreen(vc: UIViewController)
 }

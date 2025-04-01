@@ -11,13 +11,33 @@ import UIKit
 
 class HistoryWeightCell: UITableViewCell {
     
-    let size = Size()
+    let size = Size.shared
+    
+    lazy var unView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .colorFhy
+        view.layer.cornerRadius = size.scaleHeight(10)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.widthAnchor.constraint(equalToConstant: size.scaleWidth(335)).isActive = true
+        view.heightAnchor.constraint(equalToConstant: size.scaleHeight(51)).isActive = true
+        return view
+    }()
     
     lazy var labelDate: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 14, weight: .regular)
         label.textColor = .colorBlack1
         label.textAlignment = .left
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var labelProgress: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 14, weight: .regular)
+        label.textColor = .colorProgressGreen
+        label.textAlignment = .right
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -33,30 +53,32 @@ class HistoryWeightCell: UITableViewCell {
         return label
     }()
     
-    lazy var sepView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .backgroundColor
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.widthAnchor.constraint(equalToConstant: size.screenWidth()).isActive = true
-        view.heightAnchor.constraint(equalToConstant: size.scaleHeight(1)).isActive = true
-        return view
-    }()
+    func setupCell(textDate: String, textValue: String, textProgress: String, colorProgress: UIColor) {
+        labelDate.text = textDate
+        labelWeight.text = textValue
+        labelProgress.text = textProgress
+        labelProgress.textColor = colorProgress
+    }
     
     private func setupView() {
-        contentView.addSubview(labelDate)
-        contentView.addSubview(labelWeight)
-        contentView.addSubview(sepView)
+        contentView.addSubview(unView)
+        unView.addSubview(labelDate)
+        unView.addSubview(labelWeight)
+        unView.addSubview(labelProgress)
         
         NSLayoutConstraint.activate([
+            unView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            unView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            
+            labelDate.centerYAnchor.constraint(equalTo: unView.centerYAnchor),
+            labelDate.leadingAnchor.constraint(equalTo: unView.leadingAnchor, constant: size.scaleWidth(20)),
+            
+            labelProgress.centerYAnchor.constraint(equalTo: unView.centerYAnchor),
+            labelProgress.trailingAnchor.constraint(equalTo: unView.trailingAnchor, constant: -size.scaleWidth(20)),
+            
             labelWeight.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            labelWeight.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -size.scaleWidth(20)),
-            
-            labelDate.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            labelDate.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: size.scaleWidth(20)),
-            labelDate.trailingAnchor.constraint(equalTo: labelWeight.leadingAnchor),
-            
-            sepView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            sepView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
+            labelWeight.trailingAnchor.constraint(equalTo: labelProgress.leadingAnchor, constant: -size.scaleWidth(20)),
+
         ])
     }
     

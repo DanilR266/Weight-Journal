@@ -17,10 +17,12 @@ struct UserInfo: Codable {
     var weightNow: Double
     var weightGoal: Double
     var sex: String
+    var target: String
     
     enum CodingKeys: String, CodingKey {
         case userID = "user_id"
         case name
+        case target
         case email, age, sex, height
         case weightNow = "weight_now"
         case weightGoal = "weight_goal"

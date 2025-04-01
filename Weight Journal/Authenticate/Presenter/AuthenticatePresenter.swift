@@ -80,7 +80,6 @@ extension AuthenticatePresenter {
         Task {
             do {
                 let success = try await authenticateModelServer.registrationUser(user: user)
-                try? TokenStorage.save(token: success.access_token)
                 await MainActor.run { [weak self] in
                     self?.view?.stopLoader()
                     let vc = UserInfoBuilder.build(name: success.name, email: success.email, userId: success.user_id)

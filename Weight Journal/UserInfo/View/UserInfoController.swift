@@ -126,6 +126,17 @@ extension UserInfoController {
 
 extension UserInfoController: UserInfoViewProtocol {
     
+    func moveToHomeScreen(vc: UIViewController) {
+        guard let sceneDelegate = UIApplication.shared.connectedScenes
+            .first?.delegate as? SceneDelegate else { return }
+        let navVC = UINavigationController(rootViewController: vc)
+        sceneDelegate.window?.rootViewController = navVC
+    }
+    
+    func setCaloriesCalculate(calories: String) {
+        subView.labelGetCcal.text = calories
+    }
+    
     func setNextPage(page: Int) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
@@ -143,6 +154,7 @@ extension UserInfoController: UserInfoViewProtocol {
                     self.positionPageThree.constant = self.size.scaleHeight(33)
                     self.subView.circle3.backgroundColor = .colorBlack1
                     self.subView.buttonNext.setTitle(StringConstantsInfoUser.go, for: [])
+                    self.presenter?.calculateCalories(self.subView.fieldAge.text ?? "", self.subView.fieldHeight.text ?? "", self.subView.fieldWeightGoal.text ?? "")
                     self.view.layoutIfNeeded()
                 }
             default:

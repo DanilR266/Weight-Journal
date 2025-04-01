@@ -53,6 +53,7 @@ final class AuthorizationManager: AuthorizationManagerProtocol {
             throw NSError(domain: "Invalid response", code: -1, userInfo: nil)
         }
         let answer = try JSONDecoder().decode(UserRegistrationSuccess.self, from: data)
+        try TokenStorage.save(token: answer.access_token)
         return answer
     }
     
@@ -70,7 +71,6 @@ final class AuthorizationManager: AuthorizationManagerProtocol {
         }
         let answer = try JSONDecoder().decode(UserLoginSuccess.self, from: data)
         try TokenStorage.save(token: answer.access_token)
-        print("Token1: ", answer.access_token)
         return answer
     }
 }

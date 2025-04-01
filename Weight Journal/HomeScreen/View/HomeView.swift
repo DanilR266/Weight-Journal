@@ -8,7 +8,9 @@
 import Foundation
 import UIKit
 
-class HomeView: RootView {
+class HomeView: UIView {
+    
+    let size = Size.shared
     
     private lazy var labelHello: UILabel = {
         let label = UILabel()
@@ -116,7 +118,7 @@ class HomeView: RootView {
         labelName.text = name
     }
 
-    override func setupView() {
+    func setupView() {
         addSubview(labelHello)
         addSubview(labelName)
         addSubview(viewCitate)
@@ -146,7 +148,7 @@ class HomeView: RootView {
         buttonTrain.addSubview(imageTrain)
     }
     
-    override func setupConstraints() {
+    func setupConstraints() {
         NSLayoutConstraint.activate([
             labelHello.topAnchor.constraint(equalTo: topAnchor, constant: size.scaleHeight(80)),
             labelHello.leadingAnchor.constraint(equalTo: leadingAnchor, constant: size.scaleWidth(24)),
@@ -200,5 +202,15 @@ class HomeView: RootView {
         ])
     }
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .backgroundColor
+        setupView()
+        setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 

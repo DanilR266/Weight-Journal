@@ -18,4 +18,8 @@ extension UIColor {
     static var colorPurple: UIColor { return UIColor(red: 118/255, green: 103/255, blue: 209/255, alpha: 1) }
     static var customYellow: UIColor { return UIColor(red: 254/255, green: 212/255, blue: 127/255, alpha: 1) }
     static var graphColor: UIColor { return UIColor(red: 183/255, green: 189/255, blue: 205/255, alpha: 1) }
+    
+    static var colorProgressGreen: UIColor { return UIColor(red: 60/255, green: 169/255, blue: 46/255, alpha: 1) }
+    static var colorProgressRed: UIColor { return UIColor(red: 197/255, green: 27/255, blue: 27/255, alpha: 1) }
+    static var colorProgressYellow: UIColor { return UIColor(red: 233/255, green: 162/255, blue: 18/255, alpha: 1) }
 }

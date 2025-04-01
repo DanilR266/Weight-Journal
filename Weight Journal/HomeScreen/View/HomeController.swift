@@ -18,11 +18,12 @@ class HomeController: UIViewController {
         super.viewDidLoad()
         navigationController?.isNavigationBarHidden = true
         presenter?.fetchData()
+        setupActions()
     }
     
     override func loadView() {
         super.loadView()
-        self.view = subView
+        view = subView
     }
     
     func setupActions() {
@@ -37,6 +38,13 @@ extension HomeController: HomeViewProtocol {
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    func moveToRootController(vc: UIViewController) {
+        guard let sceneDelegate = UIApplication.shared.connectedScenes
+            .first?.delegate as? SceneDelegate else { return }
+        let navVC = UINavigationController(rootViewController: vc)
+        sceneDelegate.window?.rootViewController = navVC
+    }
+    
     func reloadData(name: String) {
         subView.setNameLabel(name: name)
         view.layoutIfNeeded()
@@ -46,6 +54,7 @@ extension HomeController: HomeViewProtocol {
 extension HomeController {
     
     @objc func buttonWeightTapped() {
+        print("Button weight")
         presenter?.buttonWeightTapped()
     }
     

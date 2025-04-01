@@ -37,6 +37,16 @@ class UserInfoPresenter {
 }
 
 extension UserInfoPresenter: UserInfoPresenterProtocol {
+    func calculateCalories(_ age: String, _ height: String, _ weight: String) {
+        guard !age.isEmpty, !height.isEmpty, !weight.isEmpty
+        else { return }
+        guard let age = Int(age), let height = Double(height), let weight = Double(weight)
+        else { return }
+        let calories = userModel.getCurrentCcal(age, height, weight, sex, selectGoal)
+        calculateCalories = calories
+        view?.setCaloriesCalculate(calories: "\(calories)")
+    }
+    
     func setUserInfo(age: String, height: String, weightNow: String, weightGoal: String, caloriesGoal: String) {
         guard !age.isEmpty, !height.isEmpty, !weightNow.isEmpty, !weightGoal.isEmpty
         else { return }
@@ -46,7 +56,7 @@ extension UserInfoPresenter: UserInfoPresenterProtocol {
         if !caloriesGoal.isEmpty, let calories = Int(caloriesGoal) {
             calculateCalories = calories
         }
-        let user = UserInfo(name: name, email: email, userID: userId, caloriesGoal: calculateCalories, age: age, height: height, weightNow: weightNow, weightGoal: weightGoal, sex: sex.rawValue)
+        let user = UserInfo(name: name, email: email, userID: userId, caloriesGoal: calculateCalories, age: age, height: height, weightNow: weightNow, weightGoal: weightGoal, sex: sex.rawValue, target: selectGoal.rawValue)
         
         setUserInfo(userInfo: user)
     }
@@ -97,9 +107,13 @@ private extension UserInfoPresenter {
         Task {
             do {
                 let success = try await userInfoModelServer.setUserInfo(user: userInfo)
-                print(success.text)
+                await MainActor.run { [weak self] in
+                    self?.view?.stopLoader()
+                    let vc = HomeBuilder.build()
+                    self?.view?.moveToHomeScreen(vc: vc)
+                }
             } catch {
-                print("Error set user")
+                print("Error set user: ", error)
             }
             await MainActor.run { [weak self] in
                 self?.view?.stopLoader()

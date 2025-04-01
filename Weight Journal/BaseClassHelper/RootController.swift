@@ -31,7 +31,7 @@ class RootController: UIViewController {
     
     override func loadView() {
         super.loadView()
-        self.view = customView
+        view = customView
     }
     
     func setupActions() { }

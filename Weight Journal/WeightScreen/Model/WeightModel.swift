@@ -8,7 +8,8 @@
 import Foundation
 
 
-class WeightModel {
-    
+struct TableViewHistoryData {
+    let date: String
+    let weight: Double
 }
 

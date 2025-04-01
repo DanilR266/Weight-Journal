@@ -33,14 +33,18 @@ extension HomePresenter: HomePresenterProtocol {
                     self?.view?.reloadData(name: name)
                 }
             } catch {
-                print("Error fetch", error)
+                await MainActor.run { [weak self] in
+                    let vc = AuthenticateBuilder.authenticateBuild()
+                    self?.view?.moveToRootController(vc: vc)
+                }
             }
         }
     }
     
     func buttonWeightTapped() {
-//        let vc = WeightBuilder.build()
-//        view?.moveToViewController(vc: vc)
+        
+        let vc = WeightBuilder.build(userTarget: SelectGoal(rawValue: userInfo?.target ?? "regular") ?? .regular)
+        view?.moveToViewController(vc: vc)
     }
     
     func buttonCaloriesTapped() {

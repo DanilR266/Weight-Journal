@@ -13,4 +13,5 @@ protocol HomeViewProtocol: AnyObject {
     func reloadData(name: String)
     ///moved screen
     func moveToViewController(vc: UIViewController)
+    func moveToRootController(vc: UIViewController)
 }
