@@ -97,9 +97,9 @@ extension WeightController: WeightViewProtocol {
         subView.fieldWeight.text = weightNow
     }
     
-    func updateTableViewAndGraph(data: [TableViewHistoryData]) {
+    func updateTableViewAndGraph(dataX: [String], dataY: [CGFloat]) {
         tableView.reloadData()
-        subView.setGraphData(data: data)
+        subView.setGraphData(dataX: dataX, dataY: dataY)
         view.layoutIfNeeded()
     }
 }
@@ -145,6 +145,7 @@ extension WeightController: UITableViewDelegate, UITableViewDataSource {
 extension WeightController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        presenter?.setTextFieldWeight(text: textField.text ?? "")
         return true
     }
     

@@ -173,21 +173,21 @@ class WeightView: UIView {
     
     private func setupGraph() {
         graphView.translatesAutoresizingMaskIntoConstraints = false
-        graphView.backgroundColor = .graphColor
+        graphView.backgroundColor = .clear
         graphView.layer.cornerRadius = 20
         graphView.layer.masksToBounds = true
         
         unViewGraph.addSubview(graphView)
         NSLayoutConstraint.activate([
-            graphView.topAnchor.constraint(equalTo: unViewGraph.topAnchor, constant: size.scaleHeight(12)),
-            graphView.leadingAnchor.constraint(equalTo: unViewGraph.leadingAnchor, constant: size.scaleWidth(32)),
-            graphView.trailingAnchor.constraint(equalTo: unViewGraph.trailingAnchor, constant: -size.scaleWidth(12)),
-            graphView.bottomAnchor.constraint(equalTo: unViewGraph.bottomAnchor, constant: -size.scaleHeight(24)),
+            graphView.topAnchor.constraint(equalTo: unViewGraph.topAnchor),
+            graphView.leadingAnchor.constraint(equalTo: unViewGraph.leadingAnchor),
+            graphView.trailingAnchor.constraint(equalTo: unViewGraph.trailingAnchor),
+            graphView.bottomAnchor.constraint(equalTo: unViewGraph.bottomAnchor),
         ])
     }
     
-    func setGraphData(data: [TableViewHistoryData]) {
-        graphView.dataPoints = data
+    func setGraphData(dataX: [String], dataY: [CGFloat]) {
+        graphView.setDataXDataY(dataXNew: dataX, dataYNew: dataY)
     }
     
     override init(frame: CGRect) {

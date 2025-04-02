@@ -46,31 +46,31 @@ class MockAuthenticateServer: AuthorizationManagerProtocol {
 
 class AuthenticatePresenterTests: XCTestCase {
     
-//    var presenter: AuthenticatePresenter!
-//    var mockView: MockAuthenticateView!
-//    var mockAuthManager: AuthorizationManagerProtocol!
+    var presenter: AuthenticatePresenter!
+    var mockView: MockAuthenticateView!
+    var mockAuthManager: AuthorizationManagerProtocol!
     
     override func setUp() {
         super.setUp()
-//        mockView = MockAuthenticateView()
-//        mockAuthManager = MockAuthenticateServer()
-//        presenter = AuthenticatePresenter(view: mockView, authenticateModelServer: mockAuthManager)
+        mockView = MockAuthenticateView()
+        mockAuthManager = MockAuthenticateServer()
+        presenter = AuthenticatePresenter(view: mockView, authenticateModelServer: mockAuthManager)
     }
     
     func testRegisterUserWithValidData() async {
         // Given
-//        let name = "Valid Name"
-//        let email = "valid@email.com"
-//        let password = "ValidPassword123"
-//        
-//        // When
-//        presenter.registerUser(name: name, email: email, password: password)
-//        
-//        // Ожидаем завершения асинхронных операций
-//        try? await Task.sleep(nanoseconds: 100_000_000)
-//        
-//        // Then
-//        XCTAssertTrue(mockView.setLoaderCalled)
-//        XCTAssertTrue(mockView.stopLoaderCalled)
+        let name = "Valid Name"
+        let email = "valid@email.com"
+        let password = "ValidPassword123"
+        
+        // When
+        presenter.registerUser(name: name, email: email, password: password)
+        
+        // Ожидаем завершения асинхронных операций
+        try? await Task.sleep(nanoseconds: 100_000_000)
+        
+        // Then
+        XCTAssertTrue(mockView.setLoaderCalled)
+        XCTAssertTrue(mockView.stopLoaderCalled)
     }
 }

@@ -19,7 +19,7 @@ protocol WeightPresenterProtocol: AnyObject {
     func backButton()
     func buttonPlus()
     func buttonMinus()
-    
+    func setTextFieldWeight(text: String)
     ///tableView history
     func tableViewHistoryCount() -> Int
     func tableViewHistoryData() -> [TableViewHistoryData]

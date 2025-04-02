@@ -26,6 +26,14 @@ class WeightPresenter {
 }
 
 extension WeightPresenter: WeightPresenterProtocol {
+    func setTextFieldWeight(text: String) {
+        print(text)
+        guard let textDouble = Double(text) else { return }
+        weightNow = textDouble
+        updateHistoryWeight(weightNow)
+        processingDataWeight()
+    }
+    
     func checkPreviousValue(index: Int) -> (String, UIColor) {
         if index == 0 {
             return ("0.0", .colorProgressYellow)
@@ -45,10 +53,10 @@ extension WeightPresenter: WeightPresenterProtocol {
                 }
             case .up:
                 if different > 0 {
-                    return ("+ \(abs(different).rounded(toDecimalPlaces: 1))", .colorProgressRed)
+                    return ("- \(abs(different).rounded(toDecimalPlaces: 1))", .colorProgressRed)
                 }
                 else if different < 0 {
-                    return ("- \(abs(different).rounded(toDecimalPlaces: 1))", .colorProgressGreen)
+                    return ("+ \(abs(different).rounded(toDecimalPlaces: 1))", .colorProgressGreen)
                 }
                 else {
                     return ("0.0", .colorProgressYellow)
@@ -92,17 +100,13 @@ extension WeightPresenter: WeightPresenterProtocol {
     func buttonPlus() {
         weightNow += 0.1
         updateHistoryWeight(weightNow)
-        let stringWeight = String(format: "%.1f", weightNow)
-        view?.updateFieldWeight(text: stringWeight)
-        view?.updateTableViewAndGraph(data: weightHistoryArray)
+        processingDataWeight()
     }
     
     func buttonMinus() {
         weightNow -= 0.1
         updateHistoryWeight(weightNow)
-        let stringWeight = String(format: "%.1f", weightNow)
-        view?.updateFieldWeight(text: stringWeight)
-        view?.updateTableViewAndGraph(data: weightHistoryArray)
+        processingDataWeight()
     }
     
     func viewDidLoad() {
@@ -116,7 +120,8 @@ extension WeightPresenter: WeightPresenterProtocol {
                     self.weightNow = success.weightNow
                     self.weightGoal = success.weightGoal
                     self.weightHistoryArray = convertToSortedArray()
-                    self.view?.updateTableViewAndGraph(data: weightHistoryArray)
+                    let dataGraph = getDataForGraph(data: weightHistoryArray)
+                    view?.updateTableViewAndGraph(dataX: dataGraph.0, dataY: dataGraph.1)
                 }
             } catch {
                 print(error)
@@ -143,5 +148,22 @@ private extension WeightPresenter {
             weightHistoryArray.append(item)
         }
         return weightHistoryArray
+    }
+    
+    func getDataForGraph(data: [TableViewHistoryData]) -> ([String], [CGFloat]) {
+        var dataX = [String]()
+        var dataY = [CGFloat]()
+        for item in data {
+            dataX.append(item.date)
+            dataY.append(item.weight)
+        }
+        return (dataX, dataY)
+    }
+    
+    func processingDataWeight() {
+        let stringWeight = String(format: "%.1f", weightNow)
+        view?.updateFieldWeight(text: stringWeight)
+        let dataGraph = getDataForGraph(data: weightHistoryArray)
+        view?.updateTableViewAndGraph(dataX: dataGraph.0, dataY: dataGraph.1)
     }
 }
