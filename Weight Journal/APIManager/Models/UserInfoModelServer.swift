@@ -29,10 +29,3 @@ struct UserInfo: Codable {
         case caloriesGoal = "calories_goal"
     }
 }
-
-struct Food: Codable {
-    let id: Int
-    let name: String
-    let calories: Double
-    let nutrients: [Double]
-}

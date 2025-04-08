@@ -65,12 +65,58 @@ class AuthenticatePresenterTests: XCTestCase {
         
         // When
         presenter.registerUser(name: name, email: email, password: password)
-        
-        // Ожидаем завершения асинхронных операций
         try? await Task.sleep(nanoseconds: 100_000_000)
         
         // Then
         XCTAssertTrue(mockView.setLoaderCalled)
         XCTAssertTrue(mockView.stopLoaderCalled)
     }
+    
+    func testRegisterUserWithInvalidData() async {
+        // Given
+        let name = "Valid Name"
+        let email = "validemail.com"
+        let password = "ValidPassword"
+        
+        // When
+        presenter.registerUser(name: name, email: email, password: password)
+        try? await Task.sleep(nanoseconds: 100_000_000)
+        
+        // Then
+        XCTAssertFalse(mockView.setLoaderCalled)
+        XCTAssertFalse(mockView.stopLoaderCalled)
+    }
+    
+    func testLoginUserWithValidData() async {
+        // Given
+        let email = "valid@email.com"
+        let password = "Password12345"
+        
+        // When
+        presenter.loginUser(email: email, password: password)
+        try? await Task.sleep(nanoseconds: 100_000_000)
+        
+        // Then
+        XCTAssertTrue(mockView.setLoaderCalled)
+        XCTAssertTrue(mockView.stopLoaderCalled)
+    }
+    
+    func testButtonLabelSignIn() {
+        //When
+        presenter.buttonLabelSignIn()
+        
+        //Then
+        XCTAssert(mockView.buttonsAnimationValues?.0 == 0)
+        XCTAssert(mockView.buttonsAnimationValues?.1 == 1)
+    }
+    
+    func testButtonLabelRegistration() {
+        //When
+        presenter.buttonLabelRegistration()
+        
+        //Then
+        XCTAssert(mockView.buttonsAnimationValues?.0 == 1)
+        XCTAssert(mockView.buttonsAnimationValues?.1 == 0)
+    }
+    
 }

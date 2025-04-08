@@ -8,41 +8,37 @@
 import Foundation
 import UIKit
 
-class CaloriesController: RootController {
+class CaloriesController: UIViewController {
     
-    let subView = CaloriesView()
-    let tableView = UITableView()
+    private let size = Size.shared
+    private let loaderView = LoadView()
+    private let subView = CaloriesView()
+    private let tableView = UITableView()
     
-    let viewModel: CaloriesViewModel
-    let userInfo: UserInfo?
-    
-    init(viewModel: CaloriesViewModel = .shared, userInfo: UserInfo?) {
-        self.viewModel = viewModel
-        self.userInfo = userInfo
-        super.init(customView: subView)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    var presenter: CaloriesPresenterProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.userInfo = userInfo
-        setupLabels()
+//        setupLabels()
         setupTableView()
+        setupActions()
+    }
+    
+    override func loadView() {
+        super.loadView()
+        view = subView
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
-    private func setupLabels() {
-        if let userInfo = viewModel.userInfo {
-//            subView.labelNow.text = "\(StringConstantsCalories.now) \(userInfo.caloriesNow)"
-            subView.labelGoal.text = "\(StringConstantsCalories.goal) \(userInfo.caloriesGoal)"
-        }
-    }
+//    private func setupLabels() {
+//        if let userInfo = viewModel.userInfo {
+////            subView.labelNow.text = "\(StringConstantsCalories.now) \(userInfo.caloriesNow)"
+//            subView.labelGoal.text = "\(StringConstantsCalories.goal) \(userInfo.caloriesGoal)"
+//        }
+//    }
     
     private func setupTableView() {
         tableView.delegate = self
@@ -61,12 +57,18 @@ class CaloriesController: RootController {
         ])
     }
     
-    override func setupActions() {
-        subView.buttonBack.addTarget(self, action: #selector(buttonBackAction), for: .touchUpInside)
+    private func setupActions() {
+        subView.buttonBack.addTarget(self, action: #selector(buttonBackTapped), for: .touchUpInside)
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         subView.slider.thumbView.addGestureRecognizer(panGesture)
     }
     
+}
+
+extension CaloriesController {
+    @objc private func buttonBackTapped() {
+        presenter?.backButtonTapped()
+    }
     
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: subView.slider)
@@ -78,7 +80,7 @@ class CaloriesController: RootController {
             self.subView.slider.updateThumbPosition()
             
         case .ended, .cancelled, .failed:
-            viewModel.changeNowValue(Int(translation.x))
+//            viewModel.changeNowValue(Int(translation.x))
             UIView.animate(withDuration: 0.3) {
                 self.subView.slider.sliderValue = 0
                 self.subView.slider.updateThumbPosition()
@@ -87,18 +89,35 @@ class CaloriesController: RootController {
             break
         }
     }
+}
+
+extension CaloriesController: CaloriesViewProtocol {
+    func stopLoader() {
+        loaderView.removeFromSuperview()
+        view.layoutIfNeeded()
+    }
     
+    func setLoader() {
+        loaderView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(loaderView)
+        NSLayoutConstraint.activate([
+            loaderView.topAnchor.constraint(equalTo: subView.topAnchor),
+            loaderView.leadingAnchor.constraint(equalTo: subView.leadingAnchor)
+        ])
+        view.layoutIfNeeded()
+    }
 }
 
 
 extension CaloriesController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.buttons.count
+//        return viewModel.buttons.count
+        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "caloriesButtons", for: indexPath) as! ButtonsCaloriesCell
-        cell.label.text = viewModel.buttons[indexPath.row]
+//        cell.label.text = viewModel.buttons[indexPath.row]
         return cell
     }
     

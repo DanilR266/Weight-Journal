@@ -41,14 +41,13 @@ class WeightServerManager: WeightServerManagerProtocol {
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         urlRequest.httpBody = try JSONEncoder().encode(weightInfo)
-        print(urlRequest.allHTTPHeaderFields)
         let (data, response) = try await URLSession.shared.data(for: urlRequest)
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw NSError(domain: "Invalid response Weight", code: -1, userInfo: nil)
         }
 
         do {
-            let _ = try JSONDecoder().decode(SuccesSendWeight.self, from: data)
+            let _ = try JSONDecoder().decode(SuccesPutDataInformation.self, from: data)
             
         } catch {
             throw NSError(domain: "Cannot decode data Weight", code: -1, userInfo: nil)

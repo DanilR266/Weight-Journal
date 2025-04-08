@@ -20,4 +20,7 @@ class ServerConstants {
     static let getWeightInfo = "\(domenAPI)weight/get_weight_info/"
     static let putWeightInfo = "\(domenAPI)weight/put_weight_info/"
     
+    static let getCaloriesInfo = "\(domenAPI)weight/get_calories_info/"
+    static let putCaloriesInfo = "\(domenAPI)weight/put_calories_info/"
+    
 }

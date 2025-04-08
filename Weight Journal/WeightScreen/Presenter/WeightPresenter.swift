@@ -119,9 +119,8 @@ extension WeightPresenter: WeightPresenterProtocol {
                     self.weightHistory = success.weightHistory
                     self.weightNow = success.weightNow
                     self.weightGoal = success.weightGoal
-                    self.weightHistoryArray = convertToSortedArray()
-                    let dataGraph = getDataForGraph(data: weightHistoryArray)
-                    view?.updateTableViewAndGraph(dataX: dataGraph.0, dataY: dataGraph.1)
+                    self.updateHistoryWeight(weightNow)
+                    self.processingDataWeight()
                 }
             } catch {
                 print(error)

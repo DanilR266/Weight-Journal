@@ -32,6 +32,6 @@ struct WeightInfoGet: Codable {
     }
 }
 
-struct SuccesSendWeight: Codable {
+struct SuccesPutDataInformation: Codable {
     let message: String
 }

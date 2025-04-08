@@ -28,6 +28,7 @@ class WeightController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        print("Disappear")
         presenter?.setWeightData()
     }
     
@@ -139,7 +140,6 @@ extension WeightController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return size.scaleHeight(61)
     }
-    
 }
 
 extension WeightController: UITextFieldDelegate {
