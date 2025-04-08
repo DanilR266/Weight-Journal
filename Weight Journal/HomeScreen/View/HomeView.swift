@@ -8,10 +8,11 @@
 import Foundation
 import UIKit
 
-
-class HomeView: BaseUIView {
+class HomeView: UIView {
     
-    lazy var labelHello: UILabel = {
+    let size = Size.shared
+    
+    private lazy var labelHello: UILabel = {
         let label = UILabel()
         label.text = StringConstantsHome.helloText
         label.textColor = .black
@@ -20,9 +21,8 @@ class HomeView: BaseUIView {
         return label
     }()
     
-    lazy var labelName: UILabel = {
+    private lazy var labelName: UILabel = {
         let label = UILabel()
-        label.text = " "
         label.textColor = .black
         label.font = .systemFont(ofSize: 20, weight: .medium)
         label.numberOfLines = 2
@@ -30,7 +30,7 @@ class HomeView: BaseUIView {
         return label
     }()
     
-    lazy var scrollView: UIScrollView = {
+    private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.contentSize = CGSize(width: frame.width, height: size.scaleHeight(430))
         scrollView.frame = bounds
@@ -39,7 +39,7 @@ class HomeView: BaseUIView {
         return scrollView
     }()
     
-    lazy var viewCitate: UIView = {
+    private lazy var viewCitate: UIView = {
         let view = UIView()
         view.backgroundColor = .colorRectangleView
         view.layer.cornerRadius = 15
@@ -47,7 +47,7 @@ class HomeView: BaseUIView {
         return view
     }()
     
-    lazy var textCitate: UILabel = {
+    private lazy var textCitate: UILabel = {
         let label = UILabel()
         label.text = StringConstantsHome.descriptionHome
         label.textColor = .colorFhy
@@ -58,9 +58,9 @@ class HomeView: BaseUIView {
     }()
     
     lazy var buttonWeight = UIButton().buttonMainScreen(size: size)
-    lazy var labelWeight = UILabel().labelOnButton(text: StringConstantsHome.weightMeasurement, size: size)
-    lazy var circle1 = UIView().circle(size: size)
-    lazy var imageWeight: UIImageView = {
+    private lazy var labelWeight = UILabel().labelOnButton(text: StringConstantsHome.weightMeasurement, size: size)
+    private lazy var circle1 = UIView().circle(size: size)
+    private lazy var imageWeight: UIImageView = {
         let img = UIImageView()
         img.image = UIImage(named: "weightIcon")
         img.translatesAutoresizingMaskIntoConstraints = false
@@ -68,9 +68,9 @@ class HomeView: BaseUIView {
     }()
     
     lazy var buttonCalories = UIButton().buttonMainScreen(size: size)
-    lazy var labelCalories = UILabel().labelOnButton(text: StringConstantsHome.calories, size: size)
-    lazy var circle2 = UIView().circle(size: size)
-    lazy var imageCalories: UIImageView = {
+    private lazy var labelCalories = UILabel().labelOnButton(text: StringConstantsHome.calories, size: size)
+    private lazy var circle2 = UIView().circle(size: size)
+    private lazy var imageCalories: UIImageView = {
         let img = UIImageView()
         img.image = UIImage(named: "caloriesIcon")
         img.translatesAutoresizingMaskIntoConstraints = false
@@ -78,9 +78,9 @@ class HomeView: BaseUIView {
     }()
     
     lazy var buttonWater = UIButton().buttonMainScreen(size: size)
-    lazy var labelWater = UILabel().labelOnButton(text: StringConstantsHome.water, size: size)
-    lazy var circle3 = UIView().circle(size: size)
-    lazy var imageWater: UIImageView = {
+    private lazy var labelWater = UILabel().labelOnButton(text: StringConstantsHome.water, size: size)
+    private lazy var circle3 = UIView().circle(size: size)
+    private lazy var imageWater: UIImageView = {
         let img = UIImageView()
         img.image = UIImage(named: "waterIcon")
         img.translatesAutoresizingMaskIntoConstraints = false
@@ -88,9 +88,9 @@ class HomeView: BaseUIView {
     }()
     
     lazy var buttonTrain = UIButton().buttonMainScreen(size: size)
-    lazy var labelTrain = UILabel().labelOnButton(text: StringConstantsHome.workouts, size: size)
-    lazy var circle4 = UIView().circle(size: size)
-    lazy var imageTrain: UIImageView = {
+    private lazy var labelTrain = UILabel().labelOnButton(text: StringConstantsHome.workouts, size: size)
+    private lazy var circle4 = UIView().circle(size: size)
+    private lazy var imageTrain: UIImageView = {
         let img = UIImageView()
         img.image = UIImage(named: "trainIcon")
         img.translatesAutoresizingMaskIntoConstraints = false
@@ -98,7 +98,7 @@ class HomeView: BaseUIView {
     }()
     
     
-    lazy var stackView: UIStackView = {
+    private lazy var stackView: UIStackView = {
         let view = UIStackView()
         view.axis = .horizontal
         view.spacing = size.scaleWidth(13)
@@ -106,7 +106,7 @@ class HomeView: BaseUIView {
         return view
     }()
     
-    lazy var stackView2: UIStackView = {
+    private lazy var stackView2: UIStackView = {
         let view = UIStackView()
         view.axis = .horizontal
         view.spacing = size.scaleWidth(13)
@@ -114,8 +114,11 @@ class HomeView: BaseUIView {
         return view
     }()
     
+    func setNameLabel(name: String) {
+        labelName.text = name
+    }
 
-    override func setupView() {
+    func setupView() {
         addSubview(labelHello)
         addSubview(labelName)
         addSubview(viewCitate)
@@ -145,7 +148,7 @@ class HomeView: BaseUIView {
         buttonTrain.addSubview(imageTrain)
     }
     
-    override func setupConstraints() {
+    func setupConstraints() {
         NSLayoutConstraint.activate([
             labelHello.topAnchor.constraint(equalTo: topAnchor, constant: size.scaleHeight(80)),
             labelHello.leadingAnchor.constraint(equalTo: leadingAnchor, constant: size.scaleWidth(24)),
@@ -199,5 +202,15 @@ class HomeView: BaseUIView {
         ])
     }
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .backgroundColor
+        setupView()
+        setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 

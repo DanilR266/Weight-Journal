@@ -13,21 +13,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        NotificationCenter.default.addObserver(self, selector: #selector(authStatusChanged), name: Notification.Name("AuthStatusChanged"), object: nil)
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        authStatusChanged()
-        window?.makeKeyAndVisible()
-    }
-
-    @objc func authStatusChanged() {
-        let auth = UserDefaults.standard.bool(forKey: "SignIn")
-        let rootViewController = auth ? HomeController() : AuthController()
-//        let rootViewController = UserInfoController(name: "Hello")
+//        let rootViewController = AuthenticateBuilder.authenticateBuild()
+        let rootViewController = HomeBuilder.build()
         window?.rootViewController = UINavigationController(rootViewController: rootViewController)
+        window?.makeKeyAndVisible()
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

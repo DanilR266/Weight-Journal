@@ -10,6 +10,9 @@ import UIKit
 
 
 public class Size {
+    
+    static let shared = Size()
+    
     public func scaleWidth(_ value : CGFloat) -> CGFloat{
         let x = UIScreen.main.bounds.width/375
         return value * x
